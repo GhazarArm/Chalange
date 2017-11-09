@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ghazar.chalange.FirstActivity">
+
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <Button
+            android:id="@+id/sine_up_by_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/holo_green_light"
+            android:drawableBottom="@color/colorPrimary"
+            android:text="@string/first_page_sine_up_button_via_email"></Button>
+
+        <Button
+            android:id="@+id/is_sine_in"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorAccent"
+            android:drawableBottom="@color/colorPrimary"
+            android:text="@string/sine_in_button"></Button>
+
+        <Button
+            android:id="@+id/sine_up_by_phone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/holo_green_light"
+            android:drawableBottom="@color/colorPrimary"
+            android:text="@string/first_page_sine_up_button_via_phone"></Button>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

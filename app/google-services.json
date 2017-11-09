@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "475877169961",
+    "firebase_url": "https://chalange-b84f3.firebaseio.com",
+    "project_id": "chalange-b84f3",
+    "storage_bucket": "chalange-b84f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475877169961:android:b0204a5475eab099",
+        "android_client_info": {
+          "package_name": "com.example.ghazar.chalange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475877169961-m2anvnmv2tkk35esjj5llpf5l64p0jvh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ghazar.chalange",
+            "certificate_hash": "7c60cb53041867e1d99abdfe00e52a81352aec75"
+          }
+        },
+        {
+          "client_id": "475877169961-v60gct1h9btn4shiickhu8doarvc5j94.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvL2WzuXuDogQi59Wq6LfSyGGKHi2fRlA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "475877169961-v60gct1h9btn4shiickhu8doarvc5j94.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
