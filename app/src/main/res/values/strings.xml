@@ -24,7 +24,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
-    <string name ="famale">Famale</string>
+    <string name="famale">Famale</string>
     <string name="error_invalid_name">This name is incorrect</string>
     <string name="android_studio_android_com">android.studio@android.com</string>
 

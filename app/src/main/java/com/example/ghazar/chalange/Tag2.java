@@ -49,8 +49,8 @@ public class Tag2 extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-//                Intent chatIntent = new Intent(getActivity(),  ChatActivity.class);
-//                startActivityForResult(chatIntent, REQUEST_CODE_OF_CHAT_ACTIVITY);
+                Intent chatIntent = new Intent(getActivity(),  OtherProfileActivity.class);
+                startActivityForResult(chatIntent, REQUEST_CODE_OF_CHAT_ACTIVITY);
             }
         });
         return m_view;

@@ -41,6 +41,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ghazar.chalange.FirstActivity" />
         </activity>
+        <activity android:name=".OtherProfileActivity"></activity>
     </application>
 
 </manifest>

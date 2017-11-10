@@ -2,211 +2,228 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:layout_margin="10dp">
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:srcCompat="@drawable/a" />
+        android:layout_height="match_parent"
+        android:scrollbarStyle="insideOverlay">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/my_profile_name_text_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Name"
-            android:textAlignment="center" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/my_profile_name_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="Ghazar" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/a" />
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/my_profile_name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Name"
+                    android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/my_profile_last_name_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Last Name"
-            android:textAlignment="center" />
+                <Button
+                    android:id="@+id/my_profile_name_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:text="Ghazar"
+                    android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/my_profile_last_name_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="Ter-Khachatryan" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/my_profile_last_name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Last Name"
+                    android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/my_profile_age_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Age"
-            android:textAlignment="center"
-            tools:ignore="HardcodedText" />
+                <Button
+                    android:id="@+id/my_profile_last_name_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:text="Ter-Khachatryan"
+                    android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/my_profile_age_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="21" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/my_profile_age_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Age"
+                    android:textAlignment="center"
+                    tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/my_profile_email_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Email"
-            android:textAlignment="center"
-            tools:ignore="HardcodedText" />
+                <Button
+                    android:id="@+id/my_profile_age_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:text="21"
+                    android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/my_profile_email_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="terxachatryan20@gmail.com" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/my_profile_gender_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gender"
+                    android:textAlignment="center"
+                    tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/my_profile_phone_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Phone"
-            android:textAlignment="center"
-            tools:ignore="HardcodedText" />
+                <Button
+                    android:id="@+id/my_profile_gender_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:text="Male"
+                    android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/my_profile_phone_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="-" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/my_profile_email_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Email"
+                    android:textAlignment="center"
+                    tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/my_profile_gender_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Gender"
-            android:textAlignment="center"
-            tools:ignore="HardcodedText" />
+                <Button
+                    android:id="@+id/my_profile_email_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:text="terxachatryan20@gmail.com"
+                    android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/my_profile_gender_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="Male" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/my_profile_phone_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Phone"
+                    android:textAlignment="center"
+                    tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/my_profile_team_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Your Team"
-            android:textAlignment="center"
-            tools:ignore="HardcodedText" />
+                <Button
+                    android:id="@+id/my_profile_phone_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:text="-"
+                    android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/my_profile_team_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="Red" />
+            </LinearLayout>
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/my_profile_change_password_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/background_light"
-            android:elevation="0dp"
-            android:text="Change Password" />
+                <TextView
+                    android:id="@+id/my_profile_team_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Your Team"
+                    android:textAlignment="center"
+                    tools:ignore="HardcodedText" />
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/my_profile_team_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:text="Red"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/my_profile_change_password_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_green_light"
+                    android:elevation="0dp"
+                    android:text="Change Password"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
