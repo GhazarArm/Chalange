@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
-public class OtherProfileActivity extends AppCompatActivity {
+public class OtherProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,11 @@ public class OtherProfileActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        Button FrendRequestButton = (Button)findViewById(R.id.other_profile_frend_request_button);
+        Button ChalangeRequestButton = (Button)findViewById(R.id.other_profile_chalange_request_button);
+        FrendRequestButton.setOnClickListener(this);
+        ChalangeRequestButton.setOnClickListener(this);
     }
 
     @Override
@@ -46,5 +53,14 @@ public class OtherProfileActivity extends AppCompatActivity {
 //        returnIntent.putExtra("accountName", m_accountName);
 //        setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.other_profile_frend_request_button)
+        {
+            String email = getIntent().getStringExtra(MainActivity.m_mainActivity.EMAIL);
+            MainActivity.m_mainActivity.sendFrendRequest(email);
+        }
     }
 }

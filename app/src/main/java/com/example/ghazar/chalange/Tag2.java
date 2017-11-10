@@ -49,7 +49,9 @@ public class Tag2 extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+                Account accountTo = m_accounts.elementAt(position);
                 Intent chatIntent = new Intent(getActivity(),  OtherProfileActivity.class);
+                chatIntent.putExtra(MainActivity.m_mainActivity.EMAIL, accountTo.get_email());
                 startActivityForResult(chatIntent, REQUEST_CODE_OF_CHAT_ACTIVITY);
             }
         });
@@ -72,7 +74,6 @@ public class Tag2 extends Fragment{
 
     public void SearchAccount(String name, int maxAge, int minAge){
         m_accounts = MainActivity.m_mainActivity.SearchAccount(name, maxAge, minAge);
-
         m_adapter.clear();
         for(Account acc : m_accounts)
         {

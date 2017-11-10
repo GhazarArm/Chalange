@@ -227,7 +227,7 @@
             tools:layout_editor_absoluteY="0dp">
 
             <Button
-                android:id="@+id/other_profile_fren_request_button"
+                android:id="@+id/other_profile_frend_request_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"

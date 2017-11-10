@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity
 
     public static DatabaseReference m_db = FirebaseDatabase.getInstance().getReference();
     public static DatabaseReference m_accountsDB = m_db.child("Accounts");
+    public static DatabaseReference m_accountsEventsDB = m_accountsDB.child("Events");
     public static DatabaseReference m_myAccountsDB;
     public static DatabaseReference m_frendsDB = m_db.child("Frends");
     public static DataSnapshot m_dataSnapshot;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity
 
     MenuItem m_searchItem;
     SearchDialog m_searchDialog;
+
+    public boolean m_isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +142,21 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        m_accountsEventsDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot postData : dataSnapshot.getChildren())
+                {
+                    
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         m_accountsDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -149,8 +167,9 @@ public class MainActivity extends AppCompatActivity
                 {
                     startFirstActivity();
                 }
-                else
+                else if(m_isFirst)
                 {
+                    m_isFirst = false;
                     MY_ACCOUNT_DATABASE_NAME = pref.getString(MY_ACCOUNT_DATABASE_KEY, " ");
                     m_myAccountsDB = m_accountsDB.child(MY_ACCOUNT_DATABASE_NAME);
                     m_curentAccount = new Account();
@@ -301,28 +320,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if((requestCode == REQUEST_CODE_OF_FIRST_ACTIVITY))
-        {
-            if(resultCode == RESULT_CANCELED) {
-                startFirstActivity();
-            }
-            else if(resultCode == RESULT_OK)
-            {
-                String email = data.getStringExtra(EMAIL);
-                m_curentAccount = getAccount(email);
-
-                initCurentAccountData(m_curentAccount.get_name(), m_curentAccount.get_lastName(),
-                        m_curentAccount.get_age(), m_curentAccount.get_email(),
-                        m_curentAccount.get_phone(), m_curentAccount.get_password(),
-                        m_curentAccount.get_gender(), MY_ACCOUNT_DATABASE_NAME);
-
-                getAllAccounts();
-            }
-        }
-    }
-
     public Account getAccount(String emailOrPassword)
     {
         for (DataSnapshot postSnapshot: m_dataSnapshot.getChildren())
@@ -354,69 +351,6 @@ public class MainActivity extends AppCompatActivity
     {
         Account a = new Account(name, lastName, age, "-", phone,password, gender);
         m_accountsDB.push().setValue(a);
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        m_searchItem = (MenuItem)menu.findItem(R.id.action_search);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }else  if (id == R.id.action_search) {
-            m_searchDialog = new SearchDialog(this);
-            m_searchDialog.show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_sound) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     public int getIconId(String name)
@@ -478,6 +412,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    //<<<<<<<<<<<<<<<<<<<<<<< Change Parameters <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     public void changeName(String name)
     {
         if(m_myAccountsDB != null)
@@ -515,6 +451,105 @@ public class MainActivity extends AppCompatActivity
         if(m_myAccountsDB != null)
         {
             m_myAccountsDB.child(PASSWORD).setValue(newPassword);
+        }
+    }
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+    public void sendFrendRequest(String idToAccount)
+    {
+        for (DataSnapshot postSnapshot: m_dataSnapshot.getChildren())
+        {
+            String email = postSnapshot.child(EMAIL).getValue(String.class);
+            if(email.equals(idToAccount))
+            {
+                DatabaseReference toAccountEventsDatabase = m_accountsDB.child(postSnapshot.getKey()).child("Events");
+                Events event = new Events(Events.FREND_REQUEST_EVENT_KEY, Events.FREND_REQUEST_EVENT_TEXT);
+                toAccountEventsDatabase.push().setValue(event);
+                break;
+            }
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        m_searchItem = (MenuItem)menu.findItem(R.id.action_search);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }else  if (id == R.id.action_search) {
+            m_searchDialog = new SearchDialog(this);
+            m_searchDialog.show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_sound) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if((requestCode == REQUEST_CODE_OF_FIRST_ACTIVITY))
+        {
+            if(resultCode == RESULT_CANCELED) {
+                startFirstActivity();
+            }
+            else if(resultCode == RESULT_OK)
+            {
+                String email = data.getStringExtra(EMAIL);
+                m_curentAccount = getAccount(email);
+
+                initCurentAccountData(m_curentAccount.get_name(), m_curentAccount.get_lastName(),
+                        m_curentAccount.get_age(), m_curentAccount.get_email(),
+                        m_curentAccount.get_phone(), m_curentAccount.get_password(),
+                        m_curentAccount.get_gender(), MY_ACCOUNT_DATABASE_NAME);
+
+                getAllAccounts();
+            }
         }
     }
 }
