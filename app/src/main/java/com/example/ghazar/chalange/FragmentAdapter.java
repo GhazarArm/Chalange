@@ -15,15 +15,20 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     private Tag1 tag1;
     private Tag2 tag2;
+    private MyProfile m_myProfile;
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case 0:
+                m_myProfile = new MyProfile();
+                MainActivity.m_mainActivity.setTabMyProfile(m_myProfile);
+                return m_myProfile;
+            case 1:
                 tag1 = new Tag1();
                 MainActivity.m_mainActivity.setTab1(tag1);
                 return tag1;
-            case 1:
+            case 2:
                 tag2 = new Tag2();
                 MainActivity.m_mainActivity.setTab2(tag2);
                 return tag2;
@@ -33,15 +38,16 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position){
-            case 0:return "Profile";
-            case 1:return "Search";
+            case 0:return "My profile";
+            case 1:return "Chalange";
+            case 2:return "Search";
             default:return null;
         }
     }

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
 
     public final String PREFS_NAME = "MyPrefFile";
     public final String IS_SINE_IN_KEY = "is_sine_in";
+    public static String MY_ACCOUNT_DATABASE_NAME;
 
     public final String NAME = "_name";
     public final String LAST_NAME = "_lastName";
@@ -43,12 +44,13 @@ public class MainActivity extends AppCompatActivity
     public final String PHONE = "_phone";
     public final String PASSWORD = "_password";
     public final String GENDER = "_gender";
-
+    public final String MY_ACCOUNT_DATABASE_KEY = "myAccountDatabaseName";
 
     public final int REQUEST_CODE_OF_FIRST_ACTIVITY = 1;
 
     public static DatabaseReference m_db = FirebaseDatabase.getInstance().getReference();
     public static DatabaseReference m_accountsDB = m_db.child("Accounts");
+    public static DatabaseReference m_myAccountsDB;
     public static DatabaseReference m_frendsDB = m_db.child("Frends");
     public static DataSnapshot m_dataSnapshot;
     private long    m_accountCount;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity
 
     private Tag1 m_tab1;
     private Tag2 m_tab2;
+    private MyProfile m_myProfileTab;
 
     private ImageView m_navigationHeadericon;
     private TextView  m_navigationHeaderTitle;
@@ -93,6 +96,7 @@ public class MainActivity extends AppCompatActivity
         ViewPager viewPages = (ViewPager) findViewById(R.id.vp_pages);
         PagerAdapter pagerAdapter=new FragmentAdapter(getSupportFragmentManager());
         viewPages.setAdapter(pagerAdapter);
+        viewPages.setCurrentItem(1);
 
         TabLayout tbl_pages= (TabLayout) findViewById(R.id.tbl_pages);
         tbl_pages.setupWithViewPager(viewPages);
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 1)
+                if(position == 2)
                 {
                     m_searchItem.setVisible(true);
                 }
@@ -147,6 +151,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
+                    MY_ACCOUNT_DATABASE_NAME = pref.getString(MY_ACCOUNT_DATABASE_KEY, " ");
+                    m_myAccountsDB = m_accountsDB.child(MY_ACCOUNT_DATABASE_NAME);
                     m_curentAccount = new Account();
                     m_curentAccount.set_name(pref.getString(NAME, "-"));
                     m_curentAccount.set_lastName(pref.getString(LAST_NAME, "-"));
@@ -158,6 +164,8 @@ public class MainActivity extends AppCompatActivity
                     m_navigationHeaderTitle.setText(m_curentAccount.get_name() +"  "+ m_curentAccount.get_lastName());
                     m_navigationHeaderDesc.setText((m_curentAccount.get_phone().equals("-")) ?  "Email: " + m_curentAccount.get_email() : "Phone: " + m_curentAccount.get_phone() + "  Age: " + m_curentAccount.get_age());
                     m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(m_curentAccount.get_name()));
+
+                    m_myProfileTab.InitButtonsText();
 //                    getAllAccounts();
                 }
             }
@@ -176,6 +184,10 @@ public class MainActivity extends AppCompatActivity
     public void setTab2(Tag2 tab2)
     {
         m_tab2 = tab2;
+    }
+    public void setTabMyProfile(MyProfile myProfile)
+    {
+        m_myProfileTab = myProfile;
     }
 
 
@@ -214,6 +226,14 @@ public class MainActivity extends AppCompatActivity
                     return false;
             }
         }
+        return false;
+    }
+
+    public boolean isPasswordTrue(String password)
+    {
+        if(m_curentAccount.get_password().equals(password))
+            return true;
+
         return false;
     }
 
@@ -257,7 +277,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void initCurentAccountData(String name, String lastName, int age, String email, String phone, String password, boolean gender)
+    public void initCurentAccountData(String name, String lastName, int age, String email, String phone, String password, boolean gender, String my_account_database_name)
     {
         SharedPreferences pref = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -270,6 +290,7 @@ public class MainActivity extends AppCompatActivity
         editor.putString(PHONE, phone).apply();
         editor.putString(PASSWORD, password).apply();
         editor.putBoolean(GENDER, gender);
+        editor.putString(MY_ACCOUNT_DATABASE_KEY, my_account_database_name);
         editor.commit();
     }
 
@@ -295,7 +316,7 @@ public class MainActivity extends AppCompatActivity
                 initCurentAccountData(m_curentAccount.get_name(), m_curentAccount.get_lastName(),
                         m_curentAccount.get_age(), m_curentAccount.get_email(),
                         m_curentAccount.get_phone(), m_curentAccount.get_password(),
-                        m_curentAccount.get_gender());
+                        m_curentAccount.get_gender(), MY_ACCOUNT_DATABASE_NAME);
 
                 getAllAccounts();
             }
@@ -308,6 +329,8 @@ public class MainActivity extends AppCompatActivity
         {
             if(emailOrPassword.equals(postSnapshot.child(PHONE).getValue(String.class)) || emailOrPassword.equals(postSnapshot.child(EMAIL).getValue(String.class)))
             {
+                MY_ACCOUNT_DATABASE_NAME = postSnapshot.getKey();
+                m_myAccountsDB = m_accountsDB.child(MY_ACCOUNT_DATABASE_NAME);
                 String name = postSnapshot.child(NAME).getValue(String.class);
                 String lastName = postSnapshot.child(LAST_NAME).getValue(String.class);
                 int age = postSnapshot.child(AGE).getValue(int.class);
@@ -452,6 +475,46 @@ public class MainActivity extends AppCompatActivity
             case 'z' : return R.drawable.z;
             case 'Z' : return R.drawable.z;
             default:   return R.drawable.ic_menu_slideshow;
+        }
+    }
+
+    public void changeName(String name)
+    {
+        if(m_myAccountsDB != null)
+        {
+            m_myAccountsDB.child(NAME).setValue(name);
+        }
+    }
+
+    public void changeLastName(String lastname)
+    {
+        if(m_myAccountsDB != null)
+        {
+            m_myAccountsDB.child(LAST_NAME).setValue(lastname);
+        }
+    }
+
+    public void changeAge(int age)
+    {
+        if(m_myAccountsDB != null)
+        {
+            m_myAccountsDB.child(AGE).setValue(age);
+        }
+    }
+
+    public void changeGender()
+    {
+        if(m_myAccountsDB != null)
+        {
+            m_myAccountsDB.child(GENDER).setValue(!m_curentAccount.get_gender());
+        }
+    }
+
+    public void changePassword(String curentPassword, String newPassword)
+    {
+        if(m_myAccountsDB != null)
+        {
+            m_myAccountsDB.child(PASSWORD).setValue(newPassword);
         }
     }
 }
