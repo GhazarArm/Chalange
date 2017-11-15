@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.ghazar.chalange.Objects.Account;
+
 public class OtherProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Override
@@ -20,6 +22,27 @@ public class OtherProfileActivity extends AppCompatActivity implements View.OnCl
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        Intent intent = getIntent();
+        String email = intent.getStringExtra(MainActivity.m_mainActivity.EMAIL);
+        MainActivity.m_mainActivity.sendGuestRequest(email);
+
+        Account acc = MainActivity.m_mainActivity.getAccount(email);
+
+        Button nameButton = (Button) findViewById(R.id.other_profile_name_button);
+        nameButton.setText(acc.get_name());
+        Button lastNameButton = (Button) findViewById(R.id.other_profile_last_name_button);
+        lastNameButton.setText(acc.get_lastName());
+        Button ageButton = (Button) findViewById(R.id.other_profile_age_button);
+        ageButton.setText(Integer.toString(acc.get_age()));
+        Button phoneButton = (Button) findViewById(R.id.other_profile_phone_button);
+        phoneButton.setText(acc.get_phone());
+        Button emailButton = (Button) findViewById(R.id.other_profile_email_button);
+        emailButton.setText(acc.get_email());
+        Button TeamButton = (Button) findViewById(R.id.other_profile_team_button);
+        TeamButton.setText("red");
+        Button genderButton = (Button) findViewById(R.id.other_profile_gender_button);
+        genderButton.setText(acc.get_gender() ? "Male" : "Famel");
 
         Button FrendRequestButton = (Button)findViewById(R.id.other_profile_frend_request_button);
         Button ChalangeRequestButton = (Button)findViewById(R.id.other_profile_chalange_request_button);
@@ -49,9 +72,6 @@ public class OtherProfileActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void finishActivity() {
-//        Intent returnIntent = new Intent();
-//        returnIntent.putExtra("accountName", m_accountName);
-//        setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
     }
 
@@ -61,6 +81,7 @@ public class OtherProfileActivity extends AppCompatActivity implements View.OnCl
         {
             String email = getIntent().getStringExtra(MainActivity.m_mainActivity.EMAIL);
             MainActivity.m_mainActivity.sendFrendRequest(email);
+            MainActivity.m_mainActivity.addFrend(email);
         }
     }
 }

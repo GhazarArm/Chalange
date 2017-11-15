@@ -25,9 +25,9 @@ public class Tag1 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View m_view = inflater.inflate(R.layout.tab1, container, false);
+        m_view = inflater.inflate(R.layout.tab1, container, false);
         m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewFrends);
-        m_adapter = new CustomListAdapter(getActivity());
+        m_adapter = new CustomListAdapter(getActivity(), R.layout.account_item);
         m_listViewFrends.setAdapter(m_adapter);
         m_listViewFrends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

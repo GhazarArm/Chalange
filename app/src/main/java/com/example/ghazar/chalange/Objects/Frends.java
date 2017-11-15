@@ -10,7 +10,9 @@ public class Frends {
     private String m_email;
     private Vector<String> m_frends;
 
-    public Frends(String email){m_email = email;}
+    public final static String FRENDS_VECTOR_KEY = "m_frends";
+
+    public Frends(String email){m_email = email; m_frends = new Vector<String>();}
 
     public String getM_email() {
         return m_email;

@@ -1,4 +1,6 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Objects;
+
+import java.util.Vector;
 
 /**
  * Created by ghazar on 11/10/17.
@@ -8,11 +10,17 @@ public class Events {
     private String m_eventKey;
     private String m_eventText;
 
+    public final static String EVENT_KEY = "m_eventKey";
+    public final static String EVENT_TEXT = "m_eventText";
+
     public final static String FREND_REQUEST_EVENT_KEY = "FrendRequest";
-    public final static String FREND_REQUEST_EVENT_TEXT = "Hi))... Do you want to be my frend?";
 
     public final static String CHALANGE_REQUEST_EVENT_KEY = "ChalangeRequest";
-    public final static String CHALANGE_REQUEST_EVENT_TEXT = "Hi))... i want beat you ))";
+
+    public final static String ACCOUNT_CREATED_EVENT_KEY = "AccountCreated";
+    public final static String ACCOUNT_CREATED_EVENT_TEXT = "Hi))... your account was created";
+
+    public final static String ACCOUNT_GUEST_KEY = "AccountGuest";
 
     public Events(String eventKey, String eventText)
     {

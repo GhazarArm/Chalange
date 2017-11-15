@@ -37,7 +37,7 @@
                 android:textAlignment="center" />
 
             <Button
-                android:id="@+id/my_profile_last_name_button"
+                android:id="@+id/other_profile_last_name_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -65,7 +65,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/my_profile_age_button"
+                android:id="@+id/other_profile_age_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -92,7 +92,7 @@
                 android:textAlignment="center" />
 
             <Button
-                android:id="@+id/my_profile_name_button"
+                android:id="@+id/other_profile_name_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -120,7 +120,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/my_profile_gender_button"
+                android:id="@+id/other_profile_gender_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -148,7 +148,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/my_profile_team_button"
+                android:id="@+id/other_profile_team_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -176,7 +176,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/my_profile_phone_button"
+                android:id="@+id/other_profile_phone_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -205,7 +205,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/my_profile_email_button"
+                android:id="@+id/other_profile_email_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -43,7 +43,7 @@ public class Tag2 extends Fragment{
         m_tab2 = this;
         View m_view = inflater.inflate(R.layout.tab1, container, false);
         m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewFrends);
-        m_adapter = new CustomListAdapter(getActivity());
+        m_adapter = new CustomListAdapter(getActivity(), R.layout.account_item);
         m_listViewFrends.setAdapter(m_adapter);
         m_listViewFrends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

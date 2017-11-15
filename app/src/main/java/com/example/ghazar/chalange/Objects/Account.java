@@ -31,8 +31,8 @@ public class Account {
         this.m_age = m_age;
         this.m_email = m_email;
         this.m_phone = m_phone;
-        m_password = password;
-        m_gender = gender;
+        this.m_password = password;
+        this.m_gender = gender;
     }
 
     public String get_name() {

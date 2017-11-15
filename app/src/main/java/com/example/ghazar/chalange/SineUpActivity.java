@@ -77,14 +77,11 @@ public class SineUpActivity extends AppCompatActivity implements LoaderCallbacks
     private View mProgressView;
     private View mLoginFormView;
 
-    private static MainActivity m_mainActivity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sine_up);
         setupActionBar();
-        m_mainActivity = (MainActivity)MainActivity.m_mainActivity;
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mCountryCodeView = (EditText) findViewById(R.id.country_cod_edit_text);
@@ -487,17 +484,17 @@ public class SineUpActivity extends AppCompatActivity implements LoaderCallbacks
         protected Boolean doInBackground(Void... params) {
             if(m_phonOrEmail)
             {
-                if (m_mainActivity.isPhoneExist(mEmailOrPhone))
+                if (MainActivity.m_mainActivity.isPhoneExist(mEmailOrPhone))
                     return false;
                 else
-                    m_mainActivity.AddAccountViaPhone(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
+                    MainActivity.m_mainActivity.AddAccountViaPhone(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
             }
             else
             {
-                if (m_mainActivity.isEmailExist(mEmailOrPhone))
+                if (MainActivity.m_mainActivity.isEmailExist(mEmailOrPhone))
                     return false;
                 else
-                    m_mainActivity.AddAccountViaEmail(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
+                    MainActivity.m_mainActivity.AddAccountViaEmail(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
             }
 
             return true;

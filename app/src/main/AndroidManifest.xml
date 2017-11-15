@@ -41,7 +41,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ghazar.chalange.FirstActivity" />
         </activity>
-        <activity android:name=".OtherProfileActivity"></activity>
+        <activity android:name=".OtherProfileActivity" />
+        <activity android:name=".GuestActivity" />
+        <activity android:name=".FrendRequestActivity"></activity>
     </application>
 
 </manifest>
