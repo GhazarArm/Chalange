@@ -1,4 +1,4 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.HelperClases;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -105,18 +105,6 @@ public class BadgeDrawerArrowDrawable extends DrawerArrowDrawable {
 
         invalidateSelf();
     }
-
-//    public void setText(String text) {
-//        if (!Objects.equals(this.text, text)) {
-//            this.text = text;
-//            setEnabled(true);
-//            invalidateSelf();
-//        }
-//    }
-
-//    public String getText() {
-//        return text;
-//    }
 
     public void setBackgroundColor(int color) {
         if (backgroundPaint.getColor() != color) {

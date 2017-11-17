@@ -1,21 +1,21 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Activitys;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Events;
+import com.example.ghazar.chalange.Objects.RowItem;
+import com.example.ghazar.chalange.R;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.Vector;
@@ -45,7 +45,7 @@ public class GuestActivity extends AppCompatActivity {
         }
 
         m_listViewFrends = (ListView) findViewById(R.id.guests_list_view);
-        m_adapter = new CustomListAdapter(this, R.layout.frend_request_account_item);
+        m_adapter = new CustomListAdapter(this, R.layout.account_item);
         m_listViewFrends.setAdapter(m_adapter);
 
         initList();
@@ -63,7 +63,7 @@ public class GuestActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.other_activity_menu, menu);
+        getMenuInflater().inflate(R.menu.defoult_menu, menu);
 
         return true;
     }
@@ -93,8 +93,9 @@ public class GuestActivity extends AppCompatActivity {
             if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
             {
                 Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                postSnapshot.getRef().removeValue();
                 m_emails.add(acc);
-                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()));
+                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_email());
             }
         }
     }
@@ -104,9 +105,9 @@ public class GuestActivity extends AppCompatActivity {
         return super.onCreateView(parent, name, context, attrs);
     }
 
-    public void AddItem(int imageName, String text, String extraText)
+    public void AddItem(int imageName, String text, String extraText, String id)
     {
-        RowItem rowItem = new RowItem(imageName, text, extraText);
+        RowItem rowItem = new RowItem(imageName, text, extraText, id);
         m_adapter.add(rowItem);
     }
 }

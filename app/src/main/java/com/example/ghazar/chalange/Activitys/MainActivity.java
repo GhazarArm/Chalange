@@ -1,14 +1,13 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Activitys;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,15 +17,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ghazar.chalange.Dialogs.SearchDialog;
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
+import com.example.ghazar.chalange.HelperClases.BadgeDrawerArrowDrawable;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.AccountDB;
 import com.example.ghazar.chalange.Objects.Events;
 import com.example.ghazar.chalange.Objects.Frends;
+import com.example.ghazar.chalange.R;
+import com.example.ghazar.chalange.Tabs.FragmentAdapter;
+import com.example.ghazar.chalange.Tabs.MyProfile;
+import com.example.ghazar.chalange.Tabs.Tag1;
+import com.example.ghazar.chalange.Tabs.Tag2;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +87,7 @@ public class MainActivity extends AppCompatActivity
     private TextView m_navigationHeaderTitle;
     private TextView m_navigationHeaderDesc;
     private BadgeDrawerArrowDrawable badgeDrawable;
+    private NavigationView navigationView;
 
     MenuItem m_searchItem;
     SearchDialog m_searchDialog;
@@ -101,20 +108,19 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                badgeDrawable.setEvents(0);
-                invalidateOptionsMenu();
-            }
-        };
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close) ;
+
         badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
         toggle.setDrawerArrowDrawable(badgeDrawable);
         badgeDrawable.setEnabled(false);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View hView = navigationView.getHeaderView(0);
@@ -132,9 +138,7 @@ public class MainActivity extends AppCompatActivity
 
         viewPages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
@@ -146,11 +150,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
-
         m_accountsDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -279,7 +280,7 @@ public class MainActivity extends AppCompatActivity
             int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
             String email = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class);
             String phone = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class);
-            m_tab1.AddItem(getIconId(name), name + "  " + lastName, Integer.toString(age));
+            m_tab1.AddItem(getIconId(name), name + "  " + lastName, Integer.toString(age), email);
         }
     }
 
@@ -364,8 +365,19 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     m_AccountEventsDataSnapshot = dataSnapshot;
-                    if(m_AccountEventsDataSnapshot.getChildrenCount() > 1)
-                        badgeDrawable.setEvents((int)m_AccountEventsDataSnapshot.getChildrenCount() - 1);
+                    badgeDrawable.setEvents((int)m_AccountEventsDataSnapshot.getChildrenCount() - 1);
+
+                    int frendRequestCount = 0;
+                    int guestsCount = 0;
+                    for(DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren())
+                    {
+                        if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
+                            ++frendRequestCount;
+                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
+                            ++guestsCount;
+                    }
+                    setMenuCounter(R.id.nav_frendRequest, frendRequestCount);
+                    setMenuCounter(R.id.nav_guest, guestsCount);
                 }
 
                 @Override
@@ -395,6 +407,11 @@ public class MainActivity extends AppCompatActivity
         frend.AddFrend("terxachatryan20@gamil.com");
         AccountDB accountDB = new AccountDB(acc, events, frend);
         m_accountsDB.push().setValue(accountDB);
+    }
+
+    private void setMenuCounter(@IdRes int itemId, int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
+        view.setText(count > 0 ? String.valueOf(count) : null);
     }
 
     public int getIconId(String name)
@@ -508,7 +525,6 @@ public class MainActivity extends AppCompatActivity
             if(email.equals(idToAccount))
             {
                 DatabaseReference toAccountEventsDatabase = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-//                toAccountEventsDatabase.child()
                 Events event = new Events(Events.FREND_REQUEST_EVENT_KEY, m_curentAccount.get_email());
                 toAccountEventsDatabase.push().setValue(event);
                 break;
@@ -520,6 +536,19 @@ public class MainActivity extends AppCompatActivity
     {
         m_frends.add(id);
         m_accountFrendsDB.child(Frends.FRENDS_VECTOR_KEY).setValue(m_frends);
+    }
+
+    public void deleteFrend(String id)
+    {
+        m_frends.add(id);
+        for(DataSnapshot postSnapshot : m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
+        {
+           if(postSnapshot.getValue(String.class).equals(id))
+           {
+               postSnapshot.getRef().removeValue();
+               break;
+           }
+        }
     }
 
     public void sendGuestRequest(String idToAccount)
@@ -622,8 +651,6 @@ public class MainActivity extends AppCompatActivity
                 m_navigationHeaderTitle.setText(m_curentAccount.get_name() + "  " + m_curentAccount.get_lastName());
                 m_navigationHeaderDesc.setText((m_curentAccount.get_phone().equals("-")) ? "Email: " + m_curentAccount.get_email() : "Phone: " + m_curentAccount.get_phone() + "  Age: " + m_curentAccount.get_age());
                 m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(m_curentAccount.get_name()));
-
-                m_myProfileTab.InitButtonsText();
 
                 getAllAccounts();
             }

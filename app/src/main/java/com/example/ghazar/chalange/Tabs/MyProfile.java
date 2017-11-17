@@ -1,4 +1,4 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Tabs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -7,21 +7,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
 
-import com.example.ghazar.chalange.Objects.Account;
-
-import java.util.Vector;
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.R;
 
 /**
  * Created by ghazar on 11/8/17.
@@ -42,7 +39,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
     private Button genderButton;
     private Button teamButton;
     private Button changePasswordButton;
-
+    private ImageView myProfileImageView;
 
 
     @Nullable
@@ -59,7 +56,9 @@ public class MyProfile extends Fragment implements View.OnClickListener {
         genderButton = (Button) m_view.findViewById(R.id.my_profile_gender_button);
         teamButton = (Button) m_view.findViewById(R.id.my_profile_team_button);
         changePasswordButton = (Button) m_view.findViewById(R.id.my_profile_change_password_button);
+        myProfileImageView = (ImageView) m_view.findViewById(R.id.my_profile_image_view);
 
+        InitButtonsText();
 
         try {
             nameButton.setOnClickListener(this);
@@ -87,6 +86,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
             phoneButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_phone());
             genderButton.setText((MainActivity.m_mainActivity.m_curentAccount.get_gender() ? "Male" : "Famel"));
             teamButton.setText("Red");
+            myProfileImageView.setImageResource(MainActivity.m_mainActivity.getIconId(MainActivity.m_mainActivity.m_curentAccount.get_name()));
         }catch (Exception ex) {
             Log.e("My Error", ex.toString());
         }

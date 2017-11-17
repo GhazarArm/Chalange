@@ -1,11 +1,9 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.FirstPage;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -35,11 +33,12 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import static android.Manifest.permission.READ_CONTACTS;
 

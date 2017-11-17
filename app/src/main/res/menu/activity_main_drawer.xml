@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_guest"
             android:icon="@drawable/visits"
-            android:title="Guests" />
+            android:title="Guests"
+            app:actionLayout="@layout/menu_counter"
+            />
         <item
             android:id="@+id/nav_frendRequest"
             android:icon="@drawable/users"
-            android:title="Frend Requests" />
+            android:title="Frend Requests"
+            app:actionLayout="@layout/menu_counter"/>
         <item
             android:id="@+id/nav_sound"
             android:icon="@android:drawable/ic_lock_silent_mode_off"

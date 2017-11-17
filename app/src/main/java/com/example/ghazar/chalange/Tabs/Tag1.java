@@ -1,4 +1,4 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Tabs;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.support.annotation.Nullable;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.R;
+import com.example.ghazar.chalange.Objects.RowItem;
 
 public class Tag1 extends Fragment {
     private CustomListAdapter m_adapter;
@@ -47,9 +52,9 @@ public class Tag1 extends Fragment {
         }
     }
 
-    public void AddItem(int imageName, String text, String extraText)
+    public void AddItem(int imageName, String text, String extraText, String id)
     {
-        RowItem rowItem = new RowItem(imageName, text, extraText);
+        RowItem rowItem = new RowItem(imageName, text, extraText, id);
         m_adapter.add(rowItem);
     }
 }

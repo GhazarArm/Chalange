@@ -9,4 +9,6 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="navColor">#00FF00</color>
+
+    <color name="textColors">#b3edb1</color>
 </resources>

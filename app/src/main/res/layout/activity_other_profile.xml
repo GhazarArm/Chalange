@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ghazar.chalange.OtherProfileActivity">
+    tools:context="com.example.ghazar.chalange.Activitys.OtherProfileActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         tools:layout_editor_absoluteY="8dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/other_activity_image_view"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             app:srcCompat="@drawable/a"
@@ -157,96 +157,6 @@
                 android:text="Red"
                 android:textAllCaps="false" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="0dp">
-
-            <TextView
-                android:id="@+id/my_profile_phone_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Phone"
-                android:textAlignment="center"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/other_profile_phone_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/background_light"
-                android:elevation="0dp"
-                android:text="-"
-                android:textAllCaps="false" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="0dp">
-
-            <TextView
-                android:id="@+id/my_profile_email_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Email"
-                android:textAlignment="center"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/other_profile_email_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/background_light"
-                android:elevation="0dp"
-                android:text="terxachatryan20@gmail.com"
-                android:textAllCaps="false" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:textAlignment="center"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="0dp">
-
-            <Button
-                android:id="@+id/other_profile_frend_request_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@android:color/holo_green_light"
-                android:elevation="0dp"
-                android:text="Add Frend"
-                android:textAllCaps="false" />
-
-            <Button
-                android:id="@+id/other_profile_chalange_request_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@android:color/holo_green_light"
-                android:elevation="0dp"
-                android:text="Chalange Request"
-                android:textAllCaps="false" />
         </LinearLayout>
 
     </LinearLayout>

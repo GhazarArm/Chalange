@@ -1,20 +1,19 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Activitys;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Events;
+import com.example.ghazar.chalange.Objects.RowItem;
+import com.example.ghazar.chalange.R;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.Vector;
@@ -62,7 +61,7 @@ public class FrendRequestActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.other_activity_menu, menu);
+        getMenuInflater().inflate(R.menu.defoult_menu, menu);
 
         return true;
     }
@@ -93,14 +92,14 @@ public class FrendRequestActivity extends AppCompatActivity {
             {
                 Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                 m_emails.add(acc);
-                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()));
+                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_email());
             }
         }
     }
 
-    public void AddItem(int imageName, String text, String extraText)
+    public void AddItem(int imageName, String text, String extraText, String id)
     {
-        RowItem rowItem = new RowItem(imageName, text, extraText);
+        RowItem rowItem = new RowItem(imageName, text, extraText, id);
         m_adapter.add(rowItem);
     }
 }

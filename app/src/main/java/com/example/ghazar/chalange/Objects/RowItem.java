@@ -1,14 +1,23 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Objects;
 
 public class RowItem {
     private int imageId;
     private String title;
     private String desc;
+    private String ID;
 
-    public RowItem(int imageId, String title, String desc) {
+    public RowItem(int imageId, String title, String desc, String id) {
         this.imageId = imageId;
         this.title = title;
         this.desc = desc;
+        ID = id;
+    }
+
+    public String getID() {
+        return ID;
+    }
+    public void setID(String id) {
+        this.ID = id;
     }
     public int getImageId() {
         return imageId;

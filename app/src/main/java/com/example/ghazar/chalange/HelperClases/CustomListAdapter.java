@@ -1,16 +1,19 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.HelperClases;
 
 import android.app.Activity;
-import android.os.Debug;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroupOverlay;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.Objects.Events;
+import com.example.ghazar.chalange.Objects.RowItem;
+import com.example.ghazar.chalange.R;
+import com.google.firebase.database.DataSnapshot;
 
 /**
  * Created by ghazar on 11/8/17.
@@ -52,8 +55,8 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
         Button   DeleteButton = null;
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
-        RowItem rowItem = getItem(position);
+    public View getView(final int position, View view, ViewGroup parent) {
+        final RowItem rowItem = getItem(position);
         LayoutInflater inflater=m_context.getLayoutInflater();
         if(view == null) {
             if(m_itemId == R.layout.account_item) {
@@ -74,10 +77,27 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_frendRequestAccountItemWidgets.AddFrendButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.v("asd","asd");
+                        String a = rowItem.getID();
+                        MainActivity.m_mainActivity.addFrend(a);
+                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
+                        {
+                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY) && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID()))
+                                postSnapshot.getRef().removeValue();
+                        }
                     }
                 });
-                view.setTag(m_accountItemWidgets);
+
+                m_frendRequestAccountItemWidgets.DeleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
+                        {
+                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY) && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID()))
+                                postSnapshot.getRef().removeValue();
+                        }
+                    }
+                });
+                view.setTag(m_frendRequestAccountItemWidgets);
             }
 
         }

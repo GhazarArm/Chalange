@@ -1,14 +1,15 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+
+import com.example.ghazar.chalange.R;
+import com.example.ghazar.chalange.Tabs.Tag2;
 
 /**
  * Created by ghazar on 11/9/17.

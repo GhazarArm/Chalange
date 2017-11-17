@@ -1,4 +1,4 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.FirstPage;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -30,6 +30,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.R;
 
 import java.util.ArrayList;
 import java.util.List;
