@@ -39,7 +39,7 @@ public class Tag2 extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         m_tab2 = this;
         View m_view = inflater.inflate(R.layout.tab1, container, false);
-        m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewFrends);
+        m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewChallanges);
         m_adapter = new CustomListAdapter(getActivity(), R.layout.account_item);
         m_listViewFrends.setAdapter(m_adapter);
         m_listViewFrends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -48,7 +48,7 @@ public class Tag2 extends Fragment{
             {
                 Account accountTo = m_accounts.elementAt(position);
                 Intent chatIntent = new Intent(getActivity(),  OtherProfileActivity.class);
-                chatIntent.putExtra(MainActivity.m_mainActivity.EMAIL, accountTo.get_email());
+                chatIntent.putExtra(MainActivity.m_mainActivity.ID, accountTo.get_id());
                 startActivityForResult(chatIntent, REQUEST_CODE_OF_CHAT_ACTIVITY);
             }
         });
@@ -62,6 +62,17 @@ public class Tag2 extends Fragment{
         }
     }
 
+    public void initListView(Vector<Account> accounts)
+    {
+        for(Account acc : accounts)
+        {
+            AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
+                    acc.get_name() + "  " + acc.get_lastName(),
+                    Integer.toString(acc.get_age()),
+                    acc.get_id());
+        }
+    }
+
     public void AddItem(int imageName, String text, String extraText, String id)
     {
         RowItem rowItem = new RowItem(imageName, text, extraText, id);
@@ -72,9 +83,6 @@ public class Tag2 extends Fragment{
     public void SearchAccount(String name, int maxAge, int minAge){
         m_accounts = MainActivity.m_mainActivity.SearchAccount(name, maxAge, minAge);
         m_adapter.clear();
-        for(Account acc : m_accounts)
-        {
-            AddItem(MainActivity.m_mainActivity.getIconId(name), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_email());
-        }
+        initListView(m_accounts);
     }
 }

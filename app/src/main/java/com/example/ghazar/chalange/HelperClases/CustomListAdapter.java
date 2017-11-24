@@ -1,6 +1,7 @@
 package com.example.ghazar.chalange.HelperClases;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ghazar.chalange.Activitys.FrendRequestActivity;
 import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.Objects.Events;
+import com.example.ghazar.chalange.Objects.Frends;
 import com.example.ghazar.chalange.Objects.RowItem;
 import com.example.ghazar.chalange.R;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +41,11 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
             m_accountItemWidgets = new ViewHolderForAccountItem();
         else if(m_itemId == R.layout.frend_request_account_item)
             m_frendRequestAccountItemWidgets = new ViewHolderForFrendRequestAccountItem();
-
+        try{
+            MainActivity activity = (MainActivity) context;
+        }catch (ClassCastException ex){
+            Log.e("MY ERROR", ex.toString());
+        }
     }
 
     private class ViewHolderForAccountItem {
@@ -74,6 +81,16 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_frendRequestAccountItemWidgets.AddFrendButton = (Button)view.findViewById(R.id.AddFrend);
                 m_frendRequestAccountItemWidgets.DeleteButton = (Button)view.findViewById(R.id.Delete);
 
+                m_frendRequestAccountItemWidgets.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            FrendRequestActivity.m_FrendRequestActivity.goGuest(rowItem.getID());
+                        }catch (NullPointerException ex) {
+                            Log.e("MY ERROR", ex.toString());
+                        }
+                    }
+                });
                 m_frendRequestAccountItemWidgets.AddFrendButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -81,19 +98,26 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                         MainActivity.m_mainActivity.addFrend(a);
                         for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
                         {
-                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY) && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID()))
+                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
+                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
                                 postSnapshot.getRef().removeValue();
+                                remove(rowItem);
+                                break;
+                            }
                         }
                     }
                 });
-
                 m_frendRequestAccountItemWidgets.DeleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
                         {
-                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY) && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID()))
+                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
+                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
                                 postSnapshot.getRef().removeValue();
+                                remove(rowItem);
+                                break;
+                            }
                         }
                     }
                 });

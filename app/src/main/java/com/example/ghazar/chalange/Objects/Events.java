@@ -1,5 +1,6 @@
 package com.example.ghazar.chalange.Objects;
 
+import java.util.Calendar;
 import java.util.Vector;
 
 /**
@@ -9,6 +10,7 @@ import java.util.Vector;
 public class Events {
     private String m_eventKey;
     private String m_eventText;
+    private Calendar m_date;
 
     public final static String EVENT_KEY = "m_eventKey";
     public final static String EVENT_TEXT = "m_eventText";
@@ -26,6 +28,7 @@ public class Events {
     {
         m_eventKey = eventKey;
         m_eventText = eventText;
+        m_date = Calendar.getInstance();
     }
 
     public String getM_eventKey() {

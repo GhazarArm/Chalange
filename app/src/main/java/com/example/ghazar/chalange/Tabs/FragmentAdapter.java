@@ -48,7 +48,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:return "My profile";
-            case 1:return "Chalange";
+            case 1:return "Frends";
             case 2:return "Search";
             default:return null;
         }

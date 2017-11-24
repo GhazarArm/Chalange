@@ -25,14 +25,14 @@ public class FrendRequestActivity extends AppCompatActivity {
 
     public static FrendRequestActivity m_FrendRequestActivity;
 
-    private Vector<Account> m_emails;
+    private Vector<Account> m_accounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frend_request);
 
-        m_emails = new Vector<Account>();
+        m_accounts = new Vector<Account>();
 
         m_FrendRequestActivity = this;
 
@@ -53,11 +53,18 @@ public class FrendRequestActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 Intent intent = new Intent(m_FrendRequestActivity,  OtherProfileActivity.class);
-                intent.putExtra(MainActivity.m_mainActivity.EMAIL, m_emails.elementAt(position).get_email());
+                intent.putExtra(MainActivity.m_mainActivity.ID, m_accounts.elementAt(position).get_id());
                 startActivityForResult(intent, 0);
             }
         });
     }
+
+    public void goGuest(String id){
+        Intent intent = new Intent(m_FrendRequestActivity,  OtherProfileActivity.class);
+        intent.putExtra(MainActivity.m_mainActivity.ID, id);
+        startActivityForResult(intent, 0);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,13 +93,14 @@ public class FrendRequestActivity extends AppCompatActivity {
 
     public void initList()
     {
+        m_adapter.clear();
         for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
         {
             if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
             {
                 Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
-                m_emails.add(acc);
-                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_email());
+                m_accounts.add(acc);
+                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
             }
         }
     }

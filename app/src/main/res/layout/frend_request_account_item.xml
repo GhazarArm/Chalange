@@ -42,14 +42,16 @@
 
         <Button
             android:id="@+id/AddFrend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Frend"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/add_user"
+            android:layout_marginRight="10dp"
             />
         <Button
             android:id="@+id/Delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/delete"
+            android:layout_marginLeft="10dp"/>
     </LinearLayout>
 </LinearLayout>

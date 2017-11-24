@@ -27,14 +27,14 @@ public class GuestActivity extends AppCompatActivity {
 
     public static GuestActivity m_guestActivity;
 
-    private Vector<Account> m_emails;
+    private Vector<Account> m_accounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
 
-        m_emails = new Vector<Account>();
+        m_accounts = new Vector<Account>();
 
         m_guestActivity = this;
 
@@ -55,7 +55,7 @@ public class GuestActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 Intent intent = new Intent(m_guestActivity,  OtherProfileActivity.class);
-                intent.putExtra(MainActivity.m_mainActivity.EMAIL, m_emails.elementAt(position).get_email());
+                intent.putExtra(MainActivity.m_mainActivity.ID, m_accounts.elementAt(position).get_id());
                 startActivityForResult(intent, 0);
             }
         });
@@ -94,8 +94,8 @@ public class GuestActivity extends AppCompatActivity {
             {
                 Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                 postSnapshot.getRef().removeValue();
-                m_emails.add(acc);
-                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_email());
+                m_accounts.add(acc);
+                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
             }
         }
     }

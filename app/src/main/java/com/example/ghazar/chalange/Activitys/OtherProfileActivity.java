@@ -28,13 +28,12 @@ public class OtherProfileActivity extends AppCompatActivity{
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
         Intent intent = getIntent();
-        String email = intent.getStringExtra(MainActivity.m_mainActivity.EMAIL);
-        MainActivity.m_mainActivity.sendGuestRequest(email);
+        String id = intent.getStringExtra(MainActivity.m_mainActivity.ID);
+        MainActivity.m_mainActivity.sendGuestRequest(id);
 
 
-        Account acc = MainActivity.m_mainActivity.getAccount(email);
+        Account acc = MainActivity.m_mainActivity.getAccount(id);
 
         Button nameButton = (Button) findViewById(R.id.other_profile_name_button);
         nameButton.setText(acc.get_name());
@@ -53,7 +52,7 @@ public class OtherProfileActivity extends AppCompatActivity{
         m_isFriend = false;
         for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
         {
-            if(postSnapshot.getValue(String.class).equals(acc.get_email())) {
+            if(postSnapshot.getValue(String.class).equals(acc.get_id())) {
                 m_isFriend = true;
                 break;
             }
@@ -81,13 +80,13 @@ public class OtherProfileActivity extends AppCompatActivity{
         {
             m_isFriend = !m_isFriend;
             if(m_isFriend) {
-                String email = getIntent().getStringExtra(MainActivity.m_mainActivity.EMAIL);
-                MainActivity.m_mainActivity.sendFrendRequest(email);
-                MainActivity.m_mainActivity.addFrend(email);
+                String id = getIntent().getStringExtra(MainActivity.m_mainActivity.ID);
+                MainActivity.m_mainActivity.sendFrendRequest(id);
+                MainActivity.m_mainActivity.addFrend(id);
                 m_menu.findItem(R.id.other_profile_addFriend).setIcon(R.drawable.delete_user);
             }else {
-                String email = getIntent().getStringExtra(MainActivity.m_mainActivity.EMAIL);
-                MainActivity.m_mainActivity.deleteFrend(email);
+                String id = getIntent().getStringExtra(MainActivity.m_mainActivity.ID);
+                MainActivity.m_mainActivity.deleteFrend(id);
                 m_menu.findItem(R.id.other_profile_addFriend).setIcon(R.drawable.add_user);
             }
         }else if(item.getItemId() == R.id.other_profile_challengeRequest)

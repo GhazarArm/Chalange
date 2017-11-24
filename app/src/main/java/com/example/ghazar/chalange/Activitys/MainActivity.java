@@ -8,6 +8,7 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +34,8 @@ import com.example.ghazar.chalange.Tabs.FragmentAdapter;
 import com.example.ghazar.chalange.Tabs.MyProfile;
 import com.example.ghazar.chalange.Tabs.Tag1;
 import com.example.ghazar.chalange.Tabs.Tag2;
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,20 +48,17 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public final String PREFS_NAME = "MyPrefFile";
-    public final String IS_SINE_IN_KEY = "is_sine_in";
     public static String MY_ACCOUNT_DATABASE_NAME = "m_account";
     public static String MY_ACCOUNT_FRENDS_DATABASE_NAME = "m_frends";
     public static String MY_ACCOUNT_EVENTS_DATABASE_NAME = "m_events";
-    public static String MY_ACCOUNT_DATABASE_KEY;
 
 
     public final String NAME = "_name";
     public final String LAST_NAME = "_lastName";
     public final String AGE = "_age";
-    public final String EMAIL = "_email";
-    public final String PHONE = "_phone";
-    public final String PASSWORD = "_password";
+    public final String ID = "_id";
     public final String GENDER = "_gender";
+    public final String SINE_IN_TYPE = "_sineInType";
 
     public final int REQUEST_CODE_OF_FIRST_ACTIVITY = 1;
     public final int REQUEST_CODE_OF_FREND_REQUEST_ACTIVITY = 2;
@@ -79,26 +79,24 @@ public class MainActivity extends AppCompatActivity
     public static MainActivity m_mainActivity;
     public Account m_curentAccount;
 
-    private Tag1 m_tab1;
-    private Tag2 m_tab2;
-    private MyProfile m_myProfileTab;
+    public Tag1 m_tab1;
+    public Tag2 m_tab2;
+    public MyProfile m_myProfileTab;
 
     private ImageView m_navigationHeadericon;
     private TextView m_navigationHeaderTitle;
-    private TextView m_navigationHeaderDesc;
     private BadgeDrawerArrowDrawable badgeDrawable;
     private NavigationView navigationView;
 
     MenuItem m_searchItem;
     SearchDialog m_searchDialog;
 
-    public boolean m_isFirst = true;
-
     public Vector<String> m_frends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         m_mainActivity = this;
 
@@ -125,7 +123,6 @@ public class MainActivity extends AppCompatActivity
 
         View hView = navigationView.getHeaderView(0);
         m_navigationHeaderTitle = (TextView) hView.findViewById(R.id.account_name_text_view);
-        m_navigationHeaderDesc = (TextView) hView.findViewById(R.id.account_info_text_view);
         m_navigationHeadericon = (ImageView) hView.findViewById(R.id.account_image_view);
 
         ViewPager viewPages = (ViewPager) findViewById(R.id.vp_pages);
@@ -152,50 +149,25 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageScrollStateChanged(int state) {}
         });
-        m_accountsDB.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                m_AccountDataSnapshot = dataSnapshot;
-                SharedPreferences pref = m_mainActivity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                if(!pref.getBoolean(IS_SINE_IN_KEY, false))
-                {
-                    startFirstActivity();
-                }
-                else if(m_isFirst)
-                {
-                    for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        if(!postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class).equals(pref.getString(EMAIL, "null")) ||
-                           !postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class).equals(pref.getString(PHONE, "null")))
-                                continue;
+    }
 
-                        m_isFirst = false;
-                        m_accountInfoDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_DATABASE_NAME);
-                        m_accountFrendsDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_FRENDS_DATABASE_NAME);
-                        m_accountEventsDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                        initDatabasesChangeEvent();
-                        m_curentAccount = new Account();
-                        m_curentAccount.set_name(pref.getString(NAME, "-"));
-                        m_curentAccount.set_lastName(pref.getString(LAST_NAME, "-"));
-                        m_curentAccount.set_email(pref.getString(EMAIL, "-"));
-                        m_curentAccount.set_age(pref.getInt(AGE, 18));
-                        m_curentAccount.set_gender(pref.getBoolean(GENDER, true));
-                        m_curentAccount.set_phone(pref.getString(PHONE, "-"));
-                        m_curentAccount.set_password(pref.getString(PASSWORD, "-"));
-                        m_navigationHeaderTitle.setText(m_curentAccount.get_name() + "  " + m_curentAccount.get_lastName());
-                        m_navigationHeaderDesc.setText((m_curentAccount.get_phone().equals("-")) ? "Email: " + m_curentAccount.get_email() : "Phone: " + m_curentAccount.get_phone() + "  Age: " + m_curentAccount.get_age());
-                        m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(m_curentAccount.get_name()));
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
 
-                        m_myProfileTab.InitButtonsText();
-                        getAllAccounts();
-                    }
-                }
-            }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!isLoggedIn())
+        {
+            startFirstActivity();
+        }
+        else
+        {
+            getCurentAccountDatabas();
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, databaseError.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     public void setTab1(Tag1 tab1) {
@@ -208,50 +180,22 @@ public class MainActivity extends AppCompatActivity
 
     public void setTabMyProfile(MyProfile myProfile) {
         m_myProfileTab = myProfile;
+        m_myProfileTab.InitButtonsText();
     }
 
-    public boolean isEmailExist(String email) {
-        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            String s = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class);
-            if (email.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class)))
-                return true;
-        }
-        return false;
+
+    public void AddAccount(String name, String lastName, int age, boolean gander, String id)
+    {
+        Account acc = new Account(name, lastName, age, gander, id);
+        Events events = new Events(Events.ACCOUNT_CREATED_EVENT_KEY, Events.ACCOUNT_CREATED_EVENT_TEXT);
+        Frends frend = new Frends(id);
+        frend.AddFrend("1949566748618430Facebook");
+        AccountDB accountDB = new AccountDB(acc, events, frend);
+        m_accountsDB.push().setValue(accountDB);
     }
 
-    public boolean isPhoneExist(String phone) {
-        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            String s = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class);
-            if (phone.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class)))
-                return true;
-        }
-        return false;
-    }
 
-    public boolean isPasswordTrue(String emailOrPhone, String password) {
-        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            if (emailOrPhone.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class)) || emailOrPhone.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class))) {
-                String a = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PASSWORD).getValue(String.class);
-                if (password.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PASSWORD).getValue(String.class)))
-                    return true;
-                else
-                    return false;
-            }
-        }
-        return false;
-    }
-
-    public boolean isPasswordTrue(String password) {
-        if (m_curentAccount.get_password().equals(password))
-            return true;
-
-        return false;
-    }
-
-//    public Vector<Account> getAllFrends(String email)
-//    {
-//
-//    }
+    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
 
     public Vector<Account> SearchAccount(String name, int maxAge, int minAge) {
         m_searchDialog.cancel();
@@ -262,10 +206,9 @@ public class MainActivity extends AppCompatActivity
                 int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
                 if (age >= minAge && age <= maxAge) {
                     String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
-                    String email = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class);
-                    String phone = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class);
+                    String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
                     boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
-                    Account acc = new Account(_name, lastName, age, email, phone, " ", gender);
+                    Account acc = new Account(_name, lastName, age, gender, id);
                     accounts.add(acc);
                 }
             }
@@ -273,52 +216,78 @@ public class MainActivity extends AppCompatActivity
         return accounts;
     }
 
-    public void getAllAccounts() {
+    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------  rewrite  ----------------------------------------------------------------------------------
+
+    public Vector<Account> getAllAccounts() {
+        Vector<Account> accounts = new Vector<Account>();
         for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
             String name = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
             String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
             int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
-            String email = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class);
-            String phone = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class);
-            m_tab1.AddItem(getIconId(name), name + "  " + lastName, Integer.toString(age), email);
+            boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
+            String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
+            Account acc = new Account(name, lastName, age, gender, id);
+            accounts.add(acc);
         }
+        return accounts;
     }
 
-    public void initCurentAccountData(String name, String lastName, int age, String email, String phone, String password, boolean gender, String my_account_database_name) {
+    //------------------------------------------------------------------------------  rewrite  ----------------------------------------------------------------------------------
+
+    public Vector<String> getAllFrends() {
+        Vector<String> frendsID = new Vector<String>();
+        for (DataSnapshot postSnapshot : m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren()) {
+            String id = postSnapshot.getValue(String.class);
+            frendsID.add(id);
+        }
+
+        return frendsID;
+    }
+
+    public void initCurentAccountData(String id) {
         SharedPreferences pref = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
-        editor.putBoolean(IS_SINE_IN_KEY, true);
-        editor.putString(NAME, name);
-        editor.putString(LAST_NAME, lastName).apply();
-        editor.putInt(AGE, age).apply();
-        editor.putString(EMAIL, email).apply();
-        editor.putString(PHONE, phone).apply();
-        editor.putString(PASSWORD, password).apply();
-        editor.putBoolean(GENDER, gender);
-        editor.putString(MY_ACCOUNT_DATABASE_KEY, my_account_database_name);
+        editor.putString(ID, id);
         editor.commit();
+    }
+
+    public void initNavigationHeader(String name, String lastName){
+        m_navigationHeaderTitle.setText(name + "  " + lastName);
+        m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(name));
     }
 
     public void startFirstActivity() {
         Intent intent = new Intent(this, FirstActivity.class);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, REQUEST_CODE_OF_FIRST_ACTIVITY);
     }
 
-    public Account getAccount(String emailOrPassword) {
+    //------------------------------------------------------------------------------  rewrite +  ----------------------------------------------------------------------------------
+
+    public Account getAccount(String id) {
         for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            if (emailOrPassword.equals(postSnapshot.child("m_account").child(PHONE).getValue(String.class)) || emailOrPassword.equals(postSnapshot.child("m_account").child(EMAIL).getValue(String.class))) {
-                MY_ACCOUNT_DATABASE_KEY = postSnapshot.getKey();
+            if (id.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class))) {
                 String name = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
                 String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
                 int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
-                String phone = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PHONE).getValue(String.class);
-                String password = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(PASSWORD).getValue(String.class);
                 boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
-                return new Account(name, lastName, age, emailOrPassword, phone, password, gender);
+                return new Account(name, lastName, age, gender, id);
             }
         }
         return null;
+    }
+
+    //------------------------------------------------------------------------------  rewrite +  ----------------------------------------------------------------------------------
+
+    public boolean isAccountExist(String id) {
+        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
+            if (id.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void initDatabasesChangeEvent()
@@ -329,6 +298,9 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     m_AccountInfoDataSnapshot = dataSnapshot;
+                    SharedPreferences pref = m_mainActivity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                    m_curentAccount = getAccount(pref.getString(ID, "-"));
+                    initNavigationHeader(m_curentAccount.get_name(), m_curentAccount.get_lastName());
                 }
 
                 @Override
@@ -350,6 +322,7 @@ public class MainActivity extends AppCompatActivity
                         String frendId = postSnapshot.getValue(String.class);
                         m_frends.add(frendId);
                     }
+                    m_tab1.initListView(m_frends);
                 }
 
                 @Override
@@ -388,26 +361,50 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-    public void AddAccountViaEmail(String name, String lastName, int age, String email, String password, boolean gender)
+    public void getCurentAccountDatabas()
     {
-        Account acc = new Account(name, lastName, age, email, "-", password, gender);
-        Events events = new Events(Events.ACCOUNT_CREATED_EVENT_KEY, Events.ACCOUNT_CREATED_EVENT_TEXT);
-        Frends frend = new Frends(email);
-        frend.AddFrend("terxachatryan20@gamil.com");
-        AccountDB accountDB = new AccountDB(acc, events, frend);
-        m_accountsDB.push().setValue(accountDB);
+        m_accountsDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                m_AccountDataSnapshot = dataSnapshot;
+                if(FirstActivity.isFirst){
+                    if (!isAccountExist(m_curentAccount.get_id())) {
+                        AddAccount(m_curentAccount.get_name(),
+                                m_curentAccount.get_lastName(),
+                                m_curentAccount.get_age(),
+                                m_curentAccount.get_gender(),
+                                m_curentAccount.get_id());
+                    }
+                    FirstActivity.isFirst = false;
+                }
+
+                SharedPreferences pref = m_mainActivity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
+                    try {
+                        String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
+                        String curentId = pref.getString(ID, "null");
+                        if (!id.equals(curentId))
+                            continue;
+
+                        m_accountInfoDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_DATABASE_NAME);
+                        m_accountFrendsDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_FRENDS_DATABASE_NAME);
+                        m_accountEventsDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
+                        initDatabasesChangeEvent();
+                        break;
+                    }
+                    catch (NullPointerException ex) {
+                        Log.e("MY ERROR", ex.toString());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, databaseError.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    public void AddAccountViaPhone(String name, String lastName, int age, String phone, String password, boolean gender)
-    {
-        Account acc = new Account(name, lastName, age, "-", phone,password, gender);
-        Events events = new Events(Events.ACCOUNT_CREATED_EVENT_KEY, Events.ACCOUNT_CREATED_EVENT_TEXT);
-        Frends frend = new Frends(phone);
-        frend.AddFrend("terxachatryan20@gamil.com");
-        AccountDB accountDB = new AccountDB(acc, events, frend);
-        m_accountsDB.push().setValue(accountDB);
-    }
+//
 
     private void setMenuCounter(@IdRes int itemId, int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
@@ -507,30 +504,33 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void changePassword(String curentPassword, String newPassword)
-    {
-        if(m_accountInfoDB != null)
-        {
-            m_accountInfoDB.child(PASSWORD).setValue(newPassword);
-        }
-    }
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
 
     public void sendFrendRequest(String idToAccount)
     {
         for (DataSnapshot postSnapshot: m_AccountDataSnapshot.getChildren())
         {
-            String email = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class);
-            if(email.equals(idToAccount))
+            String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
+            if(id.equals(idToAccount))
             {
                 DatabaseReference toAccountEventsDatabase = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                Events event = new Events(Events.FREND_REQUEST_EVENT_KEY, m_curentAccount.get_email());
+                DataSnapshot toAccountDataSnapshot = postSnapshot.child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
+                for(DataSnapshot event : toAccountDataSnapshot.getChildren())
+                {
+                    if(event.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY) &&
+                      (event.child(Events.EVENT_TEXT).getValue(String.class).equals(m_curentAccount.get_id())))
+                        return;
+                }
+                Events event = new Events(Events.FREND_REQUEST_EVENT_KEY, m_curentAccount.get_id());
                 toAccountEventsDatabase.push().setValue(event);
-                break;
+                return;
             }
         }
     }
+
+    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
 
     public void addFrend(String id)
     {
@@ -550,21 +550,24 @@ public class MainActivity extends AppCompatActivity
            }
         }
     }
+    //------------------------------------------------------------------------------  rewrite+ ----------------------------------------------------------------------------------
 
     public void sendGuestRequest(String idToAccount)
     {
         for (DataSnapshot postSnapshot: m_AccountDataSnapshot.getChildren())
         {
-            String email = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(EMAIL).getValue(String.class);
-            if(email.equals(idToAccount))
+            String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
+            if(id.equals(idToAccount))
             {
                 DatabaseReference toAccountEventsDatabase = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                Events event = new Events(Events.ACCOUNT_GUEST_KEY, m_curentAccount.get_email());
+                Events event = new Events(Events.ACCOUNT_GUEST_KEY, m_curentAccount.get_id());
                 toAccountEventsDatabase.push().setValue(event);
                 break;
             }
         }
     }
+
+    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
 
 
     @Override
@@ -629,31 +632,5 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if((requestCode == REQUEST_CODE_OF_FIRST_ACTIVITY))
-        {
-            if(resultCode == RESULT_CANCELED) {
-                startFirstActivity();
-            }
-            else if(resultCode == RESULT_OK)
-            {
-                String email = data.getStringExtra(EMAIL);
-                m_curentAccount = getAccount(email);
-                m_accountInfoDB = m_accountsDB.child(MY_ACCOUNT_DATABASE_KEY).child(MY_ACCOUNT_DATABASE_NAME);
-                m_accountEventsDB = m_accountsDB.child(MY_ACCOUNT_DATABASE_KEY).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                m_accountFrendsDB = m_accountsDB.child(MY_ACCOUNT_DATABASE_KEY).child(MY_ACCOUNT_FRENDS_DATABASE_NAME);
-                initDatabasesChangeEvent();
-
-                initCurentAccountData(m_curentAccount.get_name(), m_curentAccount.get_lastName(),
-                        m_curentAccount.get_age(), m_curentAccount.get_email(),
-                        m_curentAccount.get_phone(), m_curentAccount.get_password(),
-                        m_curentAccount.get_gender(), MY_ACCOUNT_DATABASE_NAME);
-
-                m_navigationHeaderTitle.setText(m_curentAccount.get_name() + "  " + m_curentAccount.get_lastName());
-                m_navigationHeaderDesc.setText((m_curentAccount.get_phone().equals("-")) ? "Email: " + m_curentAccount.get_email() : "Phone: " + m_curentAccount.get_phone() + "  Age: " + m_curentAccount.get_age());
-                m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(m_curentAccount.get_name()));
-
-                getAllAccounts();
-            }
-        }
     }
 }

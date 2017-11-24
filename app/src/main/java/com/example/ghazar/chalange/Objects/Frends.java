@@ -7,23 +7,23 @@ import java.util.Vector;
  */
 
 public class Frends {
-    private String m_email;
+    private String m_id;
     private Vector<String> m_frends;
 
     public final static String FRENDS_VECTOR_KEY = "m_frends";
 
-    public Frends(String email){m_email = email; m_frends = new Vector<String>();}
+    public Frends(String id){m_id = id; m_frends = new Vector<String>();}
 
-    public String getM_email() {
-        return m_email;
+    public String getM_id() {
+        return m_id;
     }
 
     public Vector<String> getM_frends() {
         return m_frends;
     }
 
-    public void setM_email(String m_email) {
-        this.m_email = m_email;
+    public void setM_email(String id) {
+        this.m_id = id;
     }
 
     public void setM_frends(Vector<String> m_frends) {

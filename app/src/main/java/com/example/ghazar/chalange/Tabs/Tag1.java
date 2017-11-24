@@ -12,26 +12,24 @@ import android.widget.ListView;
 
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.R;
 import com.example.ghazar.chalange.Objects.RowItem;
+
+import java.util.Vector;
 
 public class Tag1 extends Fragment {
     private CustomListAdapter m_adapter;
     private View m_view;
     private ListView m_listViewFrends;
-    private static MainActivity m_mainActivity;
 
     public final int REQUEST_CODE_OF_CHAT_ACTIVITY = 1;
 
-
-    public static void setContext(MainActivity mContext) {
-        m_mainActivity = mContext;
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         m_view = inflater.inflate(R.layout.tab1, container, false);
-        m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewFrends);
+        m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewChallanges);
         m_adapter = new CustomListAdapter(getActivity(), R.layout.account_item);
         m_listViewFrends.setAdapter(m_adapter);
         m_listViewFrends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -49,6 +47,19 @@ public class Tag1 extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             String result = data.getStringExtra("accountName");
+        }
+    }
+
+    public void initListView(Vector<String> accountsID)
+    {
+        m_adapter.clear();
+        for(String id : accountsID)
+        {
+            Account acc = MainActivity.m_mainActivity.getAccount(id);
+            AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
+                    acc.get_name() + "  " + acc.get_lastName(),
+                    Integer.toString(acc.get_age()),
+                    acc.get_id());
         }
     }
 

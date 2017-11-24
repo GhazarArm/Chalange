@@ -481,20 +481,22 @@ public class SineUpActivity extends AppCompatActivity implements LoaderCallbacks
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if(m_phonOrEmail)
-            {
-                if (MainActivity.m_mainActivity.isPhoneExist(mEmailOrPhone))
-                    return false;
-                else
-                    MainActivity.m_mainActivity.AddAccountViaPhone(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
-            }
-            else
-            {
-                if (MainActivity.m_mainActivity.isEmailExist(mEmailOrPhone))
-                    return false;
-                else
-                    MainActivity.m_mainActivity.AddAccountViaEmail(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
-            }
+            //-------------------------------rewrite------------------------------------
+//            if(m_phonOrEmail)
+//            {
+//                if (MainActivity.m_mainActivity.isPhoneExist(mEmailOrPhone))
+//                    return false;
+//                else
+//                    MainActivity.m_mainActivity.AddAccountViaPhone(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
+//            }
+//            else
+//            {
+//                if (MainActivity.m_mainActivity.isEmailExist(mEmailOrPhone))
+//                    return false;
+//                else
+//                    MainActivity.m_mainActivity.AddAccountViaEmail(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
+//            }
+            //-------------------------------rewrite------------------------------------
 
             return true;
         }

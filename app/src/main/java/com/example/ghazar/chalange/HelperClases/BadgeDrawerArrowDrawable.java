@@ -16,7 +16,6 @@ public class BadgeDrawerArrowDrawable extends DrawerArrowDrawable {
 
     private Paint backgroundPaint;
     private Paint textPaint;
-//    private String text;
     private int events;
     private boolean enabled = true;
 
@@ -49,10 +48,6 @@ public class BadgeDrawerArrowDrawable extends DrawerArrowDrawable {
         final float y = HALF_SIZE_FACTOR * bounds.height();
         canvas.drawCircle(x, y, SIZE_FACTOR * bounds.width(), backgroundPaint);
 
-//        if (text == null || text.length() == 0) {
-//            return;
-//        }
-//
         final Rect textBounds = new Rect();
         textPaint.getTextBounds(Integer.toString(events), 0, Integer.toString(events).length(), textBounds);
         canvas.drawText(Integer.toString(events), x, y + textBounds.height() / 2, textPaint);
@@ -72,7 +67,7 @@ public class BadgeDrawerArrowDrawable extends DrawerArrowDrawable {
     public void setEvents(int events) {
         this.events = events;
 
-        if(events == 0)
+        if(events <= 0)
             setEnabled(false);
         else
             setEnabled(true);
