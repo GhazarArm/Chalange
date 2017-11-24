@@ -40,18 +40,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <ImageView
             android:id="@+id/AddFrend"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
             android:background="@drawable/add_user"
-            android:layout_marginRight="10dp"
-            />
-        <Button
+            android:padding="5dp"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
             android:id="@+id/Delete"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
             android:background="@drawable/delete"
-            android:layout_marginLeft="10dp"/>
+            android:padding="5dp"
+            tools:ignore="ContentDescription" />
+
     </LinearLayout>
 </LinearLayout>

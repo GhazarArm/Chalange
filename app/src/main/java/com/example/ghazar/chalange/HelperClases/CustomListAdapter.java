@@ -41,11 +41,6 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
             m_accountItemWidgets = new ViewHolderForAccountItem();
         else if(m_itemId == R.layout.frend_request_account_item)
             m_frendRequestAccountItemWidgets = new ViewHolderForFrendRequestAccountItem();
-        try{
-            MainActivity activity = (MainActivity) context;
-        }catch (ClassCastException ex){
-            Log.e("MY ERROR", ex.toString());
-        }
     }
 
     private class ViewHolderForAccountItem {
@@ -58,8 +53,8 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
         ImageView imageView = null;
         TextView txtTitle = null;
         TextView txtDesc = null;
-        Button   AddFrendButton = null;
-        Button   DeleteButton = null;
+        ImageView   AddFrendButton = null;
+        ImageView   DeleteButton = null;
     }
 
     public View getView(final int position, View view, ViewGroup parent) {
@@ -71,6 +66,21 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_accountItemWidgets.txtDesc = (TextView) view.findViewById(R.id.Desc);
                 m_accountItemWidgets.txtTitle = (TextView) view.findViewById(R.id.title);
                 m_accountItemWidgets.imageView = (ImageView) view.findViewById(R.id.icon);
+
+                m_accountItemWidgets.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            MainActivity activity = (MainActivity) CustomListAdapter.this.m_context;
+                            MainActivity.m_mainActivity.m_tab1.goGuest(rowItem.getID());
+                        }catch (ClassCastException ex){
+                            Log.e("MY ERROR", ex.toString());
+                        }catch (NullPointerException ex) {
+                            Log.e("MY ERROR", ex.toString());
+                        }
+                    }
+                });
+
                 view.setTag(m_accountItemWidgets);
             }
             else if(m_itemId == R.layout.frend_request_account_item) {
@@ -78,14 +88,17 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_frendRequestAccountItemWidgets.txtDesc = (TextView) view.findViewById(R.id.Desc);
                 m_frendRequestAccountItemWidgets.txtTitle = (TextView) view.findViewById(R.id.title);
                 m_frendRequestAccountItemWidgets.imageView = (ImageView) view.findViewById(R.id.icon);
-                m_frendRequestAccountItemWidgets.AddFrendButton = (Button)view.findViewById(R.id.AddFrend);
-                m_frendRequestAccountItemWidgets.DeleteButton = (Button)view.findViewById(R.id.Delete);
+                m_frendRequestAccountItemWidgets.AddFrendButton = (ImageView)view.findViewById(R.id.AddFrend);
+                m_frendRequestAccountItemWidgets.DeleteButton = (ImageView)view.findViewById(R.id.Delete);
 
                 m_frendRequestAccountItemWidgets.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try {
-                            FrendRequestActivity.m_FrendRequestActivity.goGuest(rowItem.getID());
+                        try{
+                            FrendRequestActivity activity = (FrendRequestActivity) CustomListAdapter.this.m_context;
+                            activity.goGuest(rowItem.getID());
+                        }catch (ClassCastException ex){
+                            Log.e("MY ERROR", ex.toString());
                         }catch (NullPointerException ex) {
                             Log.e("MY ERROR", ex.toString());
                         }

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.Activitys.OtherProfileActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.Objects.Account;
@@ -36,8 +37,6 @@ public class Tag1 extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-//                Intent chatIntent = new Intent(getActivity(),  ChatActivity.class);
-//                startActivityForResult(chatIntent, REQUEST_CODE_OF_CHAT_ACTIVITY);
             }
         });
         return m_view;
@@ -48,6 +47,12 @@ public class Tag1 extends Fragment {
         if (requestCode == 1) {
             String result = data.getStringExtra("accountName");
         }
+    }
+
+    public void goGuest(String id){
+        Intent intent = new Intent(getActivity(),  OtherProfileActivity.class);
+        intent.putExtra(MainActivity.m_mainActivity.ID, id);
+        startActivityForResult(intent, 0);
     }
 
     public void initListView(Vector<String> accountsID)

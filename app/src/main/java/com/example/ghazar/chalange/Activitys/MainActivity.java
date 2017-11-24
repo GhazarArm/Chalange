@@ -273,8 +273,6 @@ public class MainActivity extends AppCompatActivity
         return null;
     }
 
-    //------------------------------------------------------------------------------  rewrite +  ----------------------------------------------------------------------------------
-
     public boolean isAccountExist(String id) {
         for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
             if (id.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class))) {
