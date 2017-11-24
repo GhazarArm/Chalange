@@ -195,7 +195,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
 
     public Vector<Account> SearchAccount(String name, int maxAge, int minAge) {
         m_searchDialog.cancel();
@@ -216,9 +215,6 @@ public class MainActivity extends AppCompatActivity
         return accounts;
     }
 
-    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
-
-    //------------------------------------------------------------------------------  rewrite  ----------------------------------------------------------------------------------
 
     public Vector<Account> getAllAccounts() {
         Vector<Account> accounts = new Vector<Account>();
@@ -234,7 +230,6 @@ public class MainActivity extends AppCompatActivity
         return accounts;
     }
 
-    //------------------------------------------------------------------------------  rewrite  ----------------------------------------------------------------------------------
 
     public Vector<String> getAllFrends() {
         Vector<String> frendsID = new Vector<String>();
@@ -264,7 +259,6 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, REQUEST_CODE_OF_FIRST_ACTIVITY);
     }
 
-    //------------------------------------------------------------------------------  rewrite +  ----------------------------------------------------------------------------------
 
     public Account getAccount(String id) {
         for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
@@ -506,8 +500,6 @@ public class MainActivity extends AppCompatActivity
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
-
     public void sendFrendRequest(String idToAccount)
     {
         for (DataSnapshot postSnapshot: m_AccountDataSnapshot.getChildren())
@@ -530,8 +522,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
-
     public void addFrend(String id)
     {
         m_frends.add(id);
@@ -550,7 +540,6 @@ public class MainActivity extends AppCompatActivity
            }
         }
     }
-    //------------------------------------------------------------------------------  rewrite+ ----------------------------------------------------------------------------------
 
     public void sendGuestRequest(String idToAccount)
     {
@@ -566,8 +555,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-    //------------------------------------------------------------------------------  rewrite+  ----------------------------------------------------------------------------------
 
 
     @Override
