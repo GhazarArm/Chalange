@@ -1,8 +1,10 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Tabs;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.example.ghazar.chalange.Activitys.MainActivity;
 
 /**
  * Created by ghazar on 11/8/17.
@@ -46,7 +48,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:return "My profile";
-            case 1:return "Chalange";
+            case 1:return "Frends";
             case 2:return "Search";
             default:return null;
         }

@@ -24,8 +24,12 @@
     <string name="title_activity_login">Sign in</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
-    <string name ="famale">Famale</string>
+    <string name="famale">Famale</string>
     <string name="error_invalid_name">This name is incorrect</string>
     <string name="android_studio_android_com">android.studio@android.com</string>
+
+    <string name="facebook_app_id">183353138886628</string>
+    <string name="fb_login_protocol_scheme">6e22314322052e0f880e6af67a65c3ac</string>
+    <string name="title_activity_sine_in_via_facebook">Sign in</string>
 
 </resources>

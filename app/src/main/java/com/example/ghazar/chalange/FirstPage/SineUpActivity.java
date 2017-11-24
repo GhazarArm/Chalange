@@ -1,11 +1,9 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.FirstPage;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -35,11 +33,12 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -77,14 +76,11 @@ public class SineUpActivity extends AppCompatActivity implements LoaderCallbacks
     private View mProgressView;
     private View mLoginFormView;
 
-    private static MainActivity m_mainActivity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sine_up);
         setupActionBar();
-        m_mainActivity = (MainActivity)MainActivity.m_mainActivity;
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mCountryCodeView = (EditText) findViewById(R.id.country_cod_edit_text);
@@ -485,20 +481,22 @@ public class SineUpActivity extends AppCompatActivity implements LoaderCallbacks
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if(m_phonOrEmail)
-            {
-                if (m_mainActivity.isPhoneExist(mEmailOrPhone))
-                    return false;
-                else
-                    m_mainActivity.AddAccountViaPhone(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
-            }
-            else
-            {
-                if (m_mainActivity.isEmailExist(mEmailOrPhone))
-                    return false;
-                else
-                    m_mainActivity.AddAccountViaEmail(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
-            }
+            //-------------------------------rewrite------------------------------------
+//            if(m_phonOrEmail)
+//            {
+//                if (MainActivity.m_mainActivity.isPhoneExist(mEmailOrPhone))
+//                    return false;
+//                else
+//                    MainActivity.m_mainActivity.AddAccountViaPhone(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
+//            }
+//            else
+//            {
+//                if (MainActivity.m_mainActivity.isEmailExist(mEmailOrPhone))
+//                    return false;
+//                else
+//                    MainActivity.m_mainActivity.AddAccountViaEmail(mName, mLastName, mAge, mEmailOrPhone, mPassword, mGender);
+//            }
+            //-------------------------------rewrite------------------------------------
 
             return true;
         }

@@ -1,4 +1,4 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.Tabs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -7,21 +7,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
 
-import com.example.ghazar.chalange.Objects.Account;
-
-import java.util.Vector;
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.R;
 
 /**
  * Created by ghazar on 11/8/17.
@@ -37,12 +34,9 @@ public class MyProfile extends Fragment implements View.OnClickListener {
     private Button nameButton;
     private Button lastNameButton;
     private Button ageButton;
-    private Button emailButton;
-    private Button phoneButton;
     private Button genderButton;
     private Button teamButton;
-    private Button changePasswordButton;
-
+    private ImageView myProfileImageView;
 
 
     @Nullable
@@ -54,22 +48,18 @@ public class MyProfile extends Fragment implements View.OnClickListener {
         nameButton = (Button) m_view.findViewById(R.id.my_profile_name_button);
         lastNameButton = (Button) m_view.findViewById(R.id.my_profile_last_name_button);
         ageButton = (Button) m_view.findViewById(R.id.my_profile_age_button);
-        emailButton = (Button) m_view.findViewById(R.id.my_profile_email_button);
-        phoneButton = (Button) m_view.findViewById(R.id.my_profile_phone_button);
         genderButton = (Button) m_view.findViewById(R.id.my_profile_gender_button);
         teamButton = (Button) m_view.findViewById(R.id.my_profile_team_button);
-        changePasswordButton = (Button) m_view.findViewById(R.id.my_profile_change_password_button);
+        myProfileImageView = (ImageView) m_view.findViewById(R.id.my_profile_image_view);
 
+        InitButtonsText();
 
         try {
             nameButton.setOnClickListener(this);
             lastNameButton.setOnClickListener(this);
             ageButton.setOnClickListener(this);
-            emailButton.setOnClickListener(this);
-            phoneButton.setOnClickListener(this);
             genderButton.setOnClickListener(this);
             teamButton.setOnClickListener(this);
-            changePasswordButton.setOnClickListener(this);
         }catch(Exception ex) {
             Log.e("My Error", ex.toString());
         }
@@ -83,10 +73,9 @@ public class MyProfile extends Fragment implements View.OnClickListener {
             nameButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_name());
             lastNameButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_lastName());
             ageButton.setText(Integer.toString(MainActivity.m_mainActivity.m_curentAccount.get_age()));
-            emailButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_email());
-            phoneButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_phone());
             genderButton.setText((MainActivity.m_mainActivity.m_curentAccount.get_gender() ? "Male" : "Famel"));
             teamButton.setText("Red");
+            myProfileImageView.setImageResource(MainActivity.m_mainActivity.getIconId(MainActivity.m_mainActivity.m_curentAccount.get_name()));
         }catch (Exception ex) {
             Log.e("My Error", ex.toString());
         }
@@ -115,6 +104,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 public void onClick(View v) {
                     dialog.dismiss();
                     MainActivity.m_mainActivity.changeName(editText.getText().toString());
+                    nameButton.setText(editText.getText().toString());
                 }
             });
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +126,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 public void onClick(View v) {
                     dialog.dismiss();
                     MainActivity.m_mainActivity.changeLastName(editText.getText().toString());
+                    lastNameButton.setText(editText.getText().toString());
                 }
             });
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +177,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 public void onClick(View v) {
                     dialog.dismiss();
                     MainActivity.m_mainActivity.changeAge(ageSeekBar.getProgress());
+                    ageButton.setText(Integer.toString(ageSeekBar.getProgress()));
                 }
             });
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -202,10 +194,10 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
                             MainActivity.m_mainActivity.changeGender();
+                            genderButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_gender() ? "Male" : "Famel");
                             break;
 
                         case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
                             break;
                     }
                 }
@@ -213,41 +205,6 @@ public class MyProfile extends Fragment implements View.OnClickListener {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Are you sure you want to change your gender?").setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
-        } else if (v.getId() == R.id.my_profile_change_password_button) {
-            final Dialog dialog = new Dialog(getActivity());
-            dialog.setContentView(R.layout.password_change_layout);
-            dialog.setTitle("Change Password");
-            dialog.show();
-            Button okButton = (Button) dialog.findViewById(R.id.password_change_ok_button);
-            Button cancelButton = (Button) dialog.findViewById(R.id.password_change_cancel_button);
-            final EditText editText = (EditText) dialog.findViewById(R.id.password_change_curent_password_edit_text);
-            final EditText newPassword = (EditText) dialog.findViewById(R.id.password_change_new_password_edit_text);
-            final EditText confirmNewPassword = (EditText) dialog.findViewById(R.id.password_change_new_password_confirm_edit_text);
-            okButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (confirmNewPassword.getText().toString().equals(newPassword.getText().toString())) {
-                        if (MainActivity.m_mainActivity.isPasswordTrue(editText.getText().toString())) {
-                            dialog.dismiss();
-                            MainActivity.m_mainActivity.changePassword(editText.getText().toString(), newPassword.getText().toString());
-                        }
-                        else
-                        {
-                            editText.setError(getString(R.string.error_incorrect_password));
-                        }
-                    }
-                    else
-                    {
-                        confirmNewPassword.setError(getString(R.string.error_incorrect_password));
-                    }
-                }
-            });
-            cancelButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
         }
     }
 }

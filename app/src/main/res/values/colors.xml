@@ -4,7 +4,11 @@
     <color name="colorRedTeam">#f23b35</color>
     <color name="colorBlueTeam">#314bf2</color>
 
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#64404254</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+    <color name="textColors">#b3edb1</color>
+
 </resources>

@@ -1,4 +1,4 @@
-package com.example.ghazar.chalange;
+package com.example.ghazar.chalange.FirstPage;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -30,6 +30,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -341,17 +344,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (m_mainActivity.isPhoneExist(mEmail) || m_mainActivity.isEmailExist(mEmail))
-            {
-                if(m_mainActivity.isPasswordTrue(mEmail, mPassword))
-                    return true;
-            }
-            else
-            {
-                return false;
-            }
+            //-------------------------------rewrite------------------------------------
+//            if (m_mainActivity.isPhoneExist(mEmail) || m_mainActivity.isEmailExist(mEmail))
+//            {
+//                if(m_mainActivity.isPasswordTrue(mEmail, mPassword))
+//                    return true;
+//            }
+//            else
+//            {
+//                return false;
+//            }
+            //-------------------------------rewrite------------------------------------
 
-            return true;
+            return false;
         }
 
         @Override
@@ -361,7 +366,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(m_mainActivity.EMAIL, mEmail);
+//                resultIntent.putExtra(m_mainActivity.EMAIL, mEmail);//-------------------------------rewrite------------------------------------
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             } else {
