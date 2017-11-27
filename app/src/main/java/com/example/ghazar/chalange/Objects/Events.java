@@ -1,6 +1,8 @@
 package com.example.ghazar.chalange.Objects;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 /**
@@ -10,10 +12,11 @@ import java.util.Vector;
 public class Events {
     private String m_eventKey;
     private String m_eventText;
-    private Calendar m_date;
+    private String m_date;
 
     public final static String EVENT_KEY = "m_eventKey";
     public final static String EVENT_TEXT = "m_eventText";
+    public final static String EVENT_DATE = "m_date";
 
     public final static String FREND_REQUEST_EVENT_KEY = "FrendRequest";
 
@@ -28,7 +31,7 @@ public class Events {
     {
         m_eventKey = eventKey;
         m_eventText = eventText;
-        m_date = Calendar.getInstance();
+        m_date = DateFormat.getDateTimeInstance().format(new Date());
     }
 
     public String getM_eventKey() {
@@ -45,5 +48,13 @@ public class Events {
 
     public void setM_eventText(String m_eventText) {
         this.m_eventText = m_eventText;
+    }
+
+    public String getM_date() {
+        return m_date;
+    }
+
+    public void setM_date(String m_date) {
+        this.m_date = m_date;
     }
 }

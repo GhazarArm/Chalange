@@ -49,12 +49,6 @@ public class Tag1 extends Fragment {
         }
     }
 
-    public void goGuest(String id){
-        Intent intent = new Intent(getActivity(),  OtherProfileActivity.class);
-        intent.putExtra(MainActivity.m_mainActivity.ID, id);
-        startActivityForResult(intent, 0);
-    }
-
     public void initListView(Vector<String> accountsID)
     {
         m_adapter.clear();

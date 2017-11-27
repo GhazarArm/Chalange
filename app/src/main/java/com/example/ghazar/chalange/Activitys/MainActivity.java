@@ -167,7 +167,13 @@ public class MainActivity extends AppCompatActivity
         {
             getCurentAccountDatabas();
         }
+    }
 
+
+    public void goGuest(String id){
+        Intent intent = new Intent(this,  OtherProfileActivity.class);
+        intent.putExtra(MainActivity.m_mainActivity.ID, id);
+        startActivityForResult(intent, 0);
     }
 
     public void setTab1(Tag1 tab1) {
@@ -293,6 +299,7 @@ public class MainActivity extends AppCompatActivity
                     SharedPreferences pref = m_mainActivity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                     m_curentAccount = getAccount(pref.getString(ID, "-"));
                     initNavigationHeader(m_curentAccount.get_name(), m_curentAccount.get_lastName());
+                    m_myProfileTab.InitButtonsText();
                 }
 
                 @Override
@@ -522,6 +529,11 @@ public class MainActivity extends AppCompatActivity
 
     public void addFrend(String id)
     {
+        for(String accId : m_frends)
+        {
+            if(accId.equals(id))
+                return;
+        }
         m_frends.add(id);
         m_accountFrendsDB.child(Frends.FRENDS_VECTOR_KEY).setValue(m_frends);
     }
@@ -576,7 +588,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }else  if (id == R.id.action_search) {

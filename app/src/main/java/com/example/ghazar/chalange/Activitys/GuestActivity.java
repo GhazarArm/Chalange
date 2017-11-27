@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +19,10 @@ import com.example.ghazar.chalange.Objects.RowItem;
 import com.example.ghazar.chalange.R;
 import com.google.firebase.database.DataSnapshot;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 public class GuestActivity extends AppCompatActivity {
 
@@ -45,7 +49,7 @@ public class GuestActivity extends AppCompatActivity {
         }
 
         m_listViewFrends = (ListView) findViewById(R.id.guests_list_view);
-        m_adapter = new CustomListAdapter(this, R.layout.account_item);
+        m_adapter = new CustomListAdapter(this, R.layout.account_item_for_guest_activity);
         m_listViewFrends.setAdapter(m_adapter);
 
         initList();
@@ -95,7 +99,13 @@ public class GuestActivity extends AppCompatActivity {
                 Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                 postSnapshot.getRef().removeValue();
                 m_accounts.add(acc);
-                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
+                String dateString = postSnapshot.child(Events.EVENT_DATE).getValue(String.class);
+
+                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
+                        acc.get_name() + "  " + acc.get_lastName(),
+                        Integer.toString(acc.get_age()),
+                        dateString,
+                        acc.get_id());
             }
         }
     }
@@ -105,9 +115,9 @@ public class GuestActivity extends AppCompatActivity {
         return super.onCreateView(parent, name, context, attrs);
     }
 
-    public void AddItem(int imageName, String text, String extraText, String id)
+    public void AddItem(int imageName, String text, String extraText, String time, String id)
     {
-        RowItem rowItem = new RowItem(imageName, text, extraText, id);
+        RowItem rowItem = new RowItem(imageName, text, extraText, time, id);
         m_adapter.add(rowItem);
     }
 }

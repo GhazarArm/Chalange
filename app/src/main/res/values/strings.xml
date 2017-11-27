@@ -32,4 +32,6 @@
     <string name="fb_login_protocol_scheme">6e22314322052e0f880e6af67a65c3ac</string>
     <string name="title_activity_sine_in_via_facebook">Sign in</string>
 
+    <string name="frend_added_you_in_her_frend_list">I added you in my frends list)</string>
+
 </resources>
