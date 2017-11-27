@@ -5,12 +5,21 @@ public class RowItem {
     private String title;
     private String desc;
     private String ID;
+    private String time;
 
     public RowItem(int imageId, String title, String desc, String id) {
         this.imageId = imageId;
         this.title = title;
         this.desc = desc;
         ID = id;
+    }
+
+    public RowItem(int imageId, String title, String desc, String time, String id) {
+        this.imageId = imageId;
+        this.title = title;
+        this.desc = desc;
+        ID = id;
+        this.time = time;
     }
 
     public String getID() {
@@ -36,6 +45,12 @@ public class RowItem {
     }
     public void setTitle(String title) {
         this.title = title;
+    }
+    public String getTime() {
+        return time;
+    }
+    public void setTime(String time) {
+        this.time = time;
     }
     @Override
     public String toString() {

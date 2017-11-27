@@ -98,9 +98,22 @@ public class FrendRequestActivity extends AppCompatActivity {
         {
             if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
             {
-                Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
-                m_accounts.add(acc);
-                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
+                int i = 0;
+                for(i = 0; i < MainActivity.m_mainActivity.m_frends.size(); ++i)
+                {
+                    if(MainActivity.m_mainActivity.m_frends.get(i).equals(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class)))
+                        continue;
+                }
+                if(i >= MainActivity.m_mainActivity.m_frends.size()) {
+                    Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                    m_accounts.add(acc);
+                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName() + "+", Integer.toString(acc.get_age()), acc.get_id());
+                }
+                else{
+                    Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                    m_accounts.add(acc);
+                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
+                }
             }
         }
     }
