@@ -47,9 +47,9 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position){
-            case 0:return "My profile";
-            case 1:return "Frends";
-            case 2:return "Search";
+            case 0:return "";
+            case 1:return "";
+            case 2:return "";
             default:return null;
         }
     }

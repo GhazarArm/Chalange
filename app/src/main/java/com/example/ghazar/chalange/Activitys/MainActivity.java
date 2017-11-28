@@ -132,6 +132,9 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tbl_pages = (TabLayout) findViewById(R.id.tbl_pages);
         tbl_pages.setupWithViewPager(viewPages);
+        tbl_pages.getTabAt(0).setIcon(R.drawable.my_profile);
+        tbl_pages.getTabAt(1).setIcon(R.drawable.friends);
+        tbl_pages.getTabAt(2).setIcon(R.drawable.search);
 
         viewPages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
