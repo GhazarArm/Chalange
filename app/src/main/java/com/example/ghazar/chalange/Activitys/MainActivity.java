@@ -1,14 +1,11 @@
 package com.example.ghazar.chalange.Activitys;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,61 +17,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ghazar.chalange.Dialogs.SearchDialog;
-import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.BadgeDrawerArrowDrawable;
 import com.example.ghazar.chalange.Objects.Account;
-import com.example.ghazar.chalange.Objects.AccountDB;
-import com.example.ghazar.chalange.Objects.Events;
-import com.example.ghazar.chalange.Objects.Frends;
+import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.R;
 import com.example.ghazar.chalange.Tabs.FragmentAdapter;
 import com.example.ghazar.chalange.Tabs.MyProfile;
 import com.example.ghazar.chalange.Tabs.Tag1;
 import com.example.ghazar.chalange.Tabs.Tag2;
-import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
-    public final String PREFS_NAME = "MyPrefFile";
-    public static String MY_ACCOUNT_DATABASE_NAME = "m_account";
-    public static String MY_ACCOUNT_FRENDS_DATABASE_NAME = "m_frends";
-    public static String MY_ACCOUNT_EVENTS_DATABASE_NAME = "m_events";
+                          implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    public final String NAME = "_name";
-    public final String LAST_NAME = "_lastName";
-    public final String AGE = "_age";
-    public final String ID = "_id";
-    public final String GENDER = "_gender";
-    public final String SINE_IN_TYPE = "_sineInType";
 
-    public final int REQUEST_CODE_OF_FIRST_ACTIVITY = 1;
-    public final int REQUEST_CODE_OF_FREND_REQUEST_ACTIVITY = 2;
-    public final int REQUEST_CODE_OF_GUEST_ACTIVITY = 3;
-
-    public static DatabaseReference m_db = FirebaseDatabase.getInstance().getReference();
-    public static DatabaseReference m_accountsDB = m_db.child("Accounts");
-    public static DatabaseReference m_accountInfoDB = null;
-    public static DatabaseReference m_accountFrendsDB = null;
-    public static DatabaseReference m_accountEventsDB = null;
-    public static DataSnapshot m_AccountInfoDataSnapshot = null;
-    public static DataSnapshot m_AccountFrendsDataSnapshot = null;
-    public static DataSnapshot m_AccountEventsDataSnapshot = null;
-    public static DataSnapshot m_AccountDataSnapshot = null;
-    private long m_accountCount;
-
+    public final int REQUEST_CODE_OF_FREND_REQUEST_ACTIVITY = 0;
+    public final int REQUEST_CODE_OF_GUEST_ACTIVITY = 1;
 
     public static MainActivity m_mainActivity;
     public Account m_curentAccount;
@@ -89,14 +50,13 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
 
     MenuItem m_searchItem;
-    SearchDialog m_searchDialog;
+    public SearchDialog m_searchDialog;
 
     public Vector<String> m_frends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         m_mainActivity = this;
 
@@ -152,31 +112,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageScrollStateChanged(int state) {}
         });
-    }
 
-    public boolean isLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        return accessToken != null;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(!isLoggedIn())
-        {
-            startFirstActivity();
-        }
-        else
-        {
-            getCurentAccountDatabas();
-        }
-    }
-
-
-    public void goGuest(String id){
-        Intent intent = new Intent(this,  OtherProfileActivity.class);
-        intent.putExtra(MainActivity.m_mainActivity.ID, id);
-        startActivityForResult(intent, 0);
+        Intent intent = getIntent();
+        String id = intent.getStringExtra(Database.NAME);
+        String first_name = intent.getStringExtra(Database.NAME);
+        String last_name = intent.getStringExtra(Database.LAST_NAME);
+        int age = intent.getIntExtra(Database.AGE, 0);
+        boolean gender = intent.getBooleanExtra(Database.GENDER, true);
+        m_curentAccount = new Account(first_name, last_name, age, gender, id);
+        initNavigationHeader(first_name, last_name);
     }
 
     public void setTab1(Tag1 tab1) {
@@ -192,221 +136,16 @@ public class MainActivity extends AppCompatActivity
         m_myProfileTab.InitButtonsText();
     }
 
-
-    public void AddAccount(String name, String lastName, int age, boolean gander, String id)
-    {
-        Account acc = new Account(name, lastName, age, gander, id);
-        Events events = new Events(Events.ACCOUNT_CREATED_EVENT_KEY, Events.ACCOUNT_CREATED_EVENT_TEXT);
-        Frends frend = new Frends(id);
-        frend.AddFrend("1949566748618430Facebook");
-        AccountDB accountDB = new AccountDB(acc, events, frend);
-        m_accountsDB.push().setValue(accountDB);
-    }
-
-
-
-    public Vector<Account> SearchAccount(String name, int maxAge, int minAge) {
-        m_searchDialog.cancel();
-        Vector<Account> accounts = new Vector<Account>();
-        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            String _name = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
-            if (_name.contains(name)) {
-                int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
-                if (age >= minAge && age <= maxAge) {
-                    String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
-                    String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
-                    boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
-                    Account acc = new Account(_name, lastName, age, gender, id);
-                    accounts.add(acc);
-                }
-            }
-        }
-        return accounts;
-    }
-
-
-    public Vector<Account> getAllAccounts() {
-        Vector<Account> accounts = new Vector<Account>();
-        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            String name = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
-            String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
-            int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
-            boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
-            String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
-            Account acc = new Account(name, lastName, age, gender, id);
-            accounts.add(acc);
-        }
-        return accounts;
-    }
-
-
-    public Vector<String> getAllFrends() {
-        Vector<String> frendsID = new Vector<String>();
-        for (DataSnapshot postSnapshot : m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren()) {
-            String id = postSnapshot.getValue(String.class);
-            frendsID.add(id);
-        }
-
-        return frendsID;
-    }
-
-    public void initCurentAccountData(String id) {
-        SharedPreferences pref = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.clear();
-        editor.putString(ID, id);
-        editor.commit();
-    }
-
     public void initNavigationHeader(String name, String lastName){
         m_navigationHeaderTitle.setText(name + "  " + lastName);
         m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(name));
     }
 
-    public void startFirstActivity() {
-        Intent intent = new Intent(this, FirstActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_OF_FIRST_ACTIVITY);
+    public void goGuest(String id){
+        Intent intent = new Intent(this,  OtherProfileActivity.class);
+        intent.putExtra(Database.ID, id);
+        startActivityForResult(intent, 0);
     }
-
-
-    public Account getAccount(String id) {
-        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            if (id.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class))) {
-                String name = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
-                String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
-                int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
-                boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
-                return new Account(name, lastName, age, gender, id);
-            }
-        }
-        return null;
-    }
-
-    public boolean isAccountExist(String id) {
-        for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            if (id.equals(postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void initDatabasesChangeEvent()
-    {
-        if(m_accountInfoDB != null)
-        {
-            m_accountInfoDB.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    m_AccountInfoDataSnapshot = dataSnapshot;
-                    SharedPreferences pref = m_mainActivity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                    m_curentAccount = getAccount(pref.getString(ID, "-"));
-                    initNavigationHeader(m_curentAccount.get_name(), m_curentAccount.get_lastName());
-                    m_myProfileTab.InitButtonsText();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        if(m_accountFrendsDB != null)
-        {
-            m_accountFrendsDB.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    m_AccountFrendsDataSnapshot = dataSnapshot;
-                    m_frends = new Vector<String>();
-                    for(DataSnapshot postSnapshot : dataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
-                    {
-                        String frendId = postSnapshot.getValue(String.class);
-                        m_frends.add(frendId);
-                    }
-                    m_tab1.initListView(m_frends);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        if(m_accountEventsDB != null)
-        {
-            m_accountEventsDB.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    m_AccountEventsDataSnapshot = dataSnapshot;
-                    badgeDrawable.setEvents((int)m_AccountEventsDataSnapshot.getChildrenCount() - 1);
-
-                    int frendRequestCount = 0;
-                    int guestsCount = 0;
-                    for(DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren())
-                    {
-                        if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
-                            ++frendRequestCount;
-                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
-                            ++guestsCount;
-                    }
-                    setMenuCounter(R.id.nav_frendRequest, frendRequestCount);
-                    setMenuCounter(R.id.nav_guest, guestsCount);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
-
-    public void getCurentAccountDatabas()
-    {
-        m_accountsDB.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                m_AccountDataSnapshot = dataSnapshot;
-                if(FirstActivity.isFirst){
-                    if (!isAccountExist(m_curentAccount.get_id())) {
-                        AddAccount(m_curentAccount.get_name(),
-                                m_curentAccount.get_lastName(),
-                                m_curentAccount.get_age(),
-                                m_curentAccount.get_gender(),
-                                m_curentAccount.get_id());
-                    }
-                    FirstActivity.isFirst = false;
-                }
-
-                SharedPreferences pref = m_mainActivity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-                    try {
-                        String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
-                        String curentId = pref.getString(ID, "null");
-                        if (!id.equals(curentId))
-                            continue;
-
-                        m_accountInfoDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_DATABASE_NAME);
-                        m_accountFrendsDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_FRENDS_DATABASE_NAME);
-                        m_accountEventsDB = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                        initDatabasesChangeEvent();
-                        break;
-                    }
-                    catch (NullPointerException ex) {
-                        Log.e("MY ERROR", ex.toString());
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, databaseError.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-//
 
     private void setMenuCounter(@IdRes int itemId, int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
@@ -471,104 +210,6 @@ public class MainActivity extends AppCompatActivity
             default:   return R.drawable.ic_menu_slideshow;
         }
     }
-
-
-    //<<<<<<<<<<<<<<<<<<<<<<< Change Parameters <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    public void changeName(String name)
-    {
-        if(m_accountInfoDB != null)
-        {
-            m_accountInfoDB.child(NAME).setValue(name);
-        }
-    }
-
-    public void changeLastName(String lastname)
-    {
-        if(m_accountInfoDB != null)
-        {
-            m_accountInfoDB.child(LAST_NAME).setValue(lastname);
-        }
-    }
-
-    public void changeAge(int age)
-    {
-        if(m_accountInfoDB != null)
-        {
-            m_accountInfoDB.child(AGE).setValue(age);
-        }
-    }
-
-    public void changeGender()
-    {
-        if(m_accountInfoDB != null)
-        {
-            m_accountInfoDB.child(GENDER).setValue(!m_curentAccount.get_gender());
-        }
-    }
-
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-    public void sendFrendRequest(String idToAccount)
-    {
-        for (DataSnapshot postSnapshot: m_AccountDataSnapshot.getChildren())
-        {
-            String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
-            if(id.equals(idToAccount))
-            {
-                DatabaseReference toAccountEventsDatabase = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                DataSnapshot toAccountDataSnapshot = postSnapshot.child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                for(DataSnapshot event : toAccountDataSnapshot.getChildren())
-                {
-                    if(event.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY) &&
-                      (event.child(Events.EVENT_TEXT).getValue(String.class).equals(m_curentAccount.get_id())))
-                        return;
-                }
-                Events event = new Events(Events.FREND_REQUEST_EVENT_KEY, m_curentAccount.get_id());
-                toAccountEventsDatabase.push().setValue(event);
-                return;
-            }
-        }
-    }
-
-    public void addFrend(String id)
-    {
-        for(String accId : m_frends)
-        {
-            if(accId.equals(id))
-                return;
-        }
-        m_frends.add(id);
-        m_accountFrendsDB.child(Frends.FRENDS_VECTOR_KEY).setValue(m_frends);
-    }
-
-    public void deleteFrend(String id)
-    {
-        m_frends.add(id);
-        for(DataSnapshot postSnapshot : m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
-        {
-           if(postSnapshot.getValue(String.class).equals(id))
-           {
-               postSnapshot.getRef().removeValue();
-               break;
-           }
-        }
-    }
-
-    public void sendGuestRequest(String idToAccount)
-    {
-        for (DataSnapshot postSnapshot: m_AccountDataSnapshot.getChildren())
-        {
-            String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
-            if(id.equals(idToAccount))
-            {
-                DatabaseReference toAccountEventsDatabase = m_accountsDB.child(postSnapshot.getKey()).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-                Events event = new Events(Events.ACCOUNT_GUEST_KEY, m_curentAccount.get_id());
-                toAccountEventsDatabase.push().setValue(event);
-                break;
-            }
-        }
-    }
-
 
     @Override
     public void onBackPressed() {

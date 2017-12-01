@@ -1,7 +1,7 @@
 package com.example.ghazar.chalange.FirstPage;
 
-import android.app.Dialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.Objects.Account;
+import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -19,36 +20,87 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.Plus;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-public class FirstActivity extends AppCompatActivity implements View.OnClickListener{
+public class FirstActivity extends AppCompatActivity implements View.OnClickListener , GoogleApiClient.OnConnectionFailedListener{
 
     public static boolean isFirst = false;
+
+    public final String NAME = "_name";
+    public final String LAST_NAME = "_lastName";
+    public final String AGE = "_age";
+    public final String ID = "_id";
+    public final String GENDER = "_gender";
 
     public final int REQUEST_CODE_OF_SINE_IN = 1;
     public final int REQUEST_CODE_OF_SINE_UP_VIA_PHONE = 2;
     public final int REQUEST_CODE_OF_SINE_IN_VIA_EMAIL = 3;
+    public final int REQUEST_CODE_OF_GOOGLE_SINE_IN = 4;
 
     LoginButton m_loginButton;
     CallbackManager m_callBackManager;
 
+    GoogleSignInClient mGoogleSignInClient;
+    GoogleApiClient mGoogleApiClient;
+
+    private String curentId;
+
+    public static Database m_database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_first);
 
-        isFirst = true;
+        m_database = new Database();
+
+        //////////////////////////////////////////////
+        //////       SIGN IN VIA GMAIL          //////
+        //////////////////////////////////////////////
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addApi(Plus.API)
+                .build();
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        SignInButton signInButton = (SignInButton)findViewById(R.id.sine_up_by_google);
+        signInButton.setOnClickListener(this);
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+        //////////////////////////////////////////////
+        //////       SIGN IN VIA FACEBOOK       //////
+        //////////////////////////////////////////////
 
         m_loginButton = (LoginButton)findViewById(R.id.sine_up_by_facebook);
         m_callBackManager = CallbackManager.Factory.create();
@@ -92,16 +144,27 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                                     e.printStackTrace();
                                 }
 
-                                MainActivity.m_mainActivity.getCurentAccountDatabas();
-                                MainActivity.m_mainActivity.initCurentAccountData(id);
-                                MainActivity.m_mainActivity.m_curentAccount = new Account(first_name,
-                                                last_name,
-                                                age,
-                                                (gender.startsWith("M") || gender.startsWith("m")) ? true : false,
-                                                id);
-                                MainActivity.m_mainActivity.initNavigationHeader(first_name, last_name);
-
-                                finish();
+                                curentId = id;
+                                m_database.setID(curentId);
+                                while(true) {
+                                    try {
+                                        Account acc = null;
+                                        if (m_database.isAccountExist(curentId)) {
+                                            acc = m_database.getAccount(curentId);
+                                            GoMainActivity(acc.get_name(),
+                                                    acc.get_lastName(),
+                                                    acc.get_age(),
+                                                    acc.get_gender(),
+                                                    curentId);
+                                        } else {
+                                            m_database.AddAccount(first_name, last_name, age, (gender.startsWith("M") || gender.startsWith("m")) ? true : false, id);
+                                            GoMainActivity(first_name, last_name, age, (gender.startsWith("M") || gender.startsWith("m")) ? true : false, id);
+                                        }
+                                        break;
+                                    } catch (NullPointerException ex) {
+                                        Log.e("MY ERROR", ex.toString());
+                                    }
+                                }
                             }
                         });
                 Bundle parameters = new Bundle();
@@ -128,7 +191,51 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         sineupemail.setOnClickListener(this);
         Button sineinphone = (Button) findViewById(R.id.sine_up_by_phone);
         sineinphone.setOnClickListener(this);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    }
+
+    public boolean isLoggedInViaFacebook() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if(accessToken != null)
+            curentId = accessToken.getUserId() + Account.FACEBOOK;
+        return accessToken != null;
+    }
+
+    public boolean isLoggedInViaGoogle() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null)
+            curentId = account.getId() + Account.GOOGLE;
+        return account != null;
+    }
+
+    public boolean isLogedIn(){
+        return (isLoggedInViaFacebook() || isLoggedInViaGoogle());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(isLogedIn()) {
+            Thread thread = new Thread(new MyRunnable(), "thread");
+            thread.start();
+            try{
+                thread.join(2000);
+            }catch (InterruptedException ex){
+                Log.e("MY ERROR", ex.toString());
+            }
+        }
+    }
+
+    public void GoMainActivity(String first_name, String last_name, int age, boolean gender, String id) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(NAME, first_name);
+        intent.putExtra(LAST_NAME, last_name);
+        intent.putExtra(AGE, age);
+        intent.putExtra(GENDER, gender);
+        intent.putExtra(ID, id);
+        startActivityForResult(intent, 0);
     }
 
     private int getAge(String birthDay){
@@ -159,6 +266,11 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         return ageInt;
     }
 
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, REQUEST_CODE_OF_GOOGLE_SINE_IN);
+    }
+
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.sine_up_by_email)
@@ -177,6 +289,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         {
             Intent intentSineIn = new Intent(this, LoginActivity.class);
             startActivityForResult(intentSineIn, REQUEST_CODE_OF_SINE_IN);
+        }else if(v.getId() == R.id.sine_up_by_google) {
+            signIn();
         }
     }
 
@@ -190,6 +304,94 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             {
                 setResult(RESULT_OK, data);
                 finish();
+            }
+        }else if (requestCode == REQUEST_CODE_OF_GOOGLE_SINE_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            GoogleSignInResult resoult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(resoult);
+        }
+    }
+
+
+    private void handleSignInResult(GoogleSignInResult resoult) {
+        if(resoult.isSuccess()) {
+            GoogleSignInAccount account = resoult.getSignInAccount();
+            // Signed in successfully, show authenticated UI.
+            String id = "-";
+            String first_name = "-";
+            String last_name = "-";
+            int age = 0;
+//            Person person  = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+//            boolean gender = (person.getGender() == Person.Gender.FEMALE )? false : true;
+//            first_name = person.getName().getGivenName();
+//            last_name = person.getName().getFamilyName();
+//            id = person.getId() + "Google";
+//            age = getAge(person.getBirthday());
+            first_name = account.getGivenName();
+            last_name = account.getFamilyName();
+            id = account.getId() + "Google";
+
+            curentId = id;
+            m_database.setID(curentId);
+            while(true){
+                try{
+                    Account acc = null;
+                    if(m_database.isAccountExist(curentId)) {
+                        acc = m_database.getAccount(curentId);
+                        GoMainActivity(acc.get_name(),
+                                acc.get_lastName(),
+                                acc.get_age(),
+                                acc.get_gender(),
+                                curentId);
+                    }
+                    else{
+                        m_database.AddAccount(first_name, last_name, age, true, id);
+                        GoMainActivity(first_name, last_name, age, true, id);
+                    }
+
+                    break;
+                }catch (NullPointerException ex){
+                    Log.e("MY ERROR", ex.toString());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+
+    class MyRunnable implements Runnable{
+        @Override
+        public void run() {
+            while (true){
+                try{
+                    m_database.setID(curentId);
+                    break;
+                }catch (NullPointerException ex){
+                    Log.e("MY ERROR", ex.toString());
+                }
+            }
+            while (true) {
+                try {
+                    Account acc = null;
+                    if (m_database.isAccountExist(curentId)) {
+                        acc = m_database.getAccount(curentId);
+                        GoMainActivity(acc.get_name(),
+                                acc.get_lastName(),
+                                acc.get_age(),
+                                acc.get_gender(),
+                                curentId);
+                    } else {
+                        Log.e("MY ERROR", "Account not exist!!!!!!!");
+                    }
+                    break;
+                } catch (NullPointerException ex) {
+                    Log.e("MY ERROR", ex.toString());
+                }
             }
         }
     }

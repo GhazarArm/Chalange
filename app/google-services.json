@@ -15,6 +15,10 @@
       },
       "oauth_client": [
         {
+          "client_id": "475877169961-gtmjchabmshq7glcshr3o9epas9a0q2q.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "475877169961-m2anvnmv2tkk35esjj5llpf5l64p0jvh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -40,7 +44,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "475877169961-v60gct1h9btn4shiickhu8doarvc5j94.apps.googleusercontent.com",
+              "client_id": "475877169961-gtmjchabmshq7glcshr3o9epas9a0q2q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

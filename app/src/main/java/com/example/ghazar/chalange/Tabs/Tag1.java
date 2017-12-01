@@ -54,11 +54,11 @@ public class Tag1 extends Fragment {
         m_adapter.clear();
         for(String id : accountsID)
         {
-            Account acc = MainActivity.m_mainActivity.getAccount(id);
-            AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
-                    acc.get_name() + "  " + acc.get_lastName(),
-                    Integer.toString(acc.get_age()),
-                    acc.get_id());
+//            Account acc = MainActivity.m_mainActivity.getAccount(id);
+//            AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
+//                    acc.get_name() + "  " + acc.get_lastName(),
+//                    Integer.toString(acc.get_age()),
+//                    acc.get_id());
         }
     }
 

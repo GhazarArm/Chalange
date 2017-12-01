@@ -103,7 +103,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    MainActivity.m_mainActivity.changeName(editText.getText().toString());
+//                    MainActivity.m_mainActivity.changeName(editText.getText().toString());
                     nameButton.setText(editText.getText().toString());
                 }
             });
@@ -125,7 +125,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    MainActivity.m_mainActivity.changeLastName(editText.getText().toString());
+//                    MainActivity.m_mainActivity.changeLastName(editText.getText().toString());
                     lastNameButton.setText(editText.getText().toString());
                 }
             });
@@ -176,7 +176,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    MainActivity.m_mainActivity.changeAge(ageSeekBar.getProgress());
+//                    MainActivity.m_mainActivity.changeAge(ageSeekBar.getProgress());
                     ageButton.setText(Integer.toString(ageSeekBar.getProgress()));
                 }
             });
@@ -193,7 +193,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            MainActivity.m_mainActivity.changeGender();
+//                            MainActivity.m_mainActivity.changeGender();
                             genderButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_gender() ? "Male" : "Famel");
                             break;
 

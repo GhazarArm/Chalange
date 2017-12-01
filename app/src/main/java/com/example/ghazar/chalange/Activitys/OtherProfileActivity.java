@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.ghazar.chalange.Objects.Account;
+import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.Objects.Frends;
 import com.example.ghazar.chalange.R;
 import com.google.firebase.database.DataSnapshot;
@@ -29,34 +30,34 @@ public class OtherProfileActivity extends AppCompatActivity{
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         Intent intent = getIntent();
-        String id = intent.getStringExtra(MainActivity.m_mainActivity.ID);
-        MainActivity.m_mainActivity.sendGuestRequest(id);
+        String id = intent.getStringExtra(Database.ID);
+//        MainActivity.m_mainActivity.sendGuestRequest(id);
 
 
-        Account acc = MainActivity.m_mainActivity.getAccount(id);
+//        Account acc = MainActivity.m_mainActivity.getAccount(id);
 
-        Button nameButton = (Button) findViewById(R.id.other_profile_name_button);
-        nameButton.setText(acc.get_name());
-        Button lastNameButton = (Button) findViewById(R.id.other_profile_last_name_button);
-        lastNameButton.setText(acc.get_lastName());
-        Button ageButton = (Button) findViewById(R.id.other_profile_age_button);
-        ageButton.setText(Integer.toString(acc.get_age()));
-        Button TeamButton = (Button) findViewById(R.id.other_profile_team_button);
-        TeamButton.setText("red");
-        Button genderButton = (Button) findViewById(R.id.other_profile_gender_button);
-        genderButton.setText(acc.get_gender() ? "Male" : "Famel");
-
-        ImageView imageView = (ImageView) findViewById(R.id.other_activity_image_view);
-        imageView.setImageResource(MainActivity.m_mainActivity.getIconId(acc.get_name()));
+//        Button nameButton = (Button) findViewById(R.id.other_profile_name_button);
+//        nameButton.setText(acc.get_name());
+//        Button lastNameButton = (Button) findViewById(R.id.other_profile_last_name_button);
+//        lastNameButton.setText(acc.get_lastName());
+//        Button ageButton = (Button) findViewById(R.id.other_profile_age_button);
+//        ageButton.setText(Integer.toString(acc.get_age()));
+//        Button TeamButton = (Button) findViewById(R.id.other_profile_team_button);
+//        TeamButton.setText("red");
+//        Button genderButton = (Button) findViewById(R.id.other_profile_gender_button);
+//        genderButton.setText(acc.get_gender() ? "Male" : "Famel");
+//
+//        ImageView imageView = (ImageView) findViewById(R.id.other_activity_image_view);
+//        imageView.setImageResource(MainActivity.m_mainActivity.getIconId(acc.get_name()));
 
         m_isFriend = false;
-        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
-        {
-            if(postSnapshot.getValue(String.class).equals(acc.get_id())) {
-                m_isFriend = true;
-                break;
-            }
-        }
+//        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
+//        {
+//            if(postSnapshot.getValue(String.class).equals(acc.get_id())) {
+//                m_isFriend = true;
+//                break;
+//            }
+//        }
     }
 
     @Override
@@ -80,13 +81,13 @@ public class OtherProfileActivity extends AppCompatActivity{
         {
             m_isFriend = !m_isFriend;
             if(m_isFriend) {
-                String id = getIntent().getStringExtra(MainActivity.m_mainActivity.ID);
-                MainActivity.m_mainActivity.sendFrendRequest(id);
-                MainActivity.m_mainActivity.addFrend(id);
+                String id = getIntent().getStringExtra(Database.ID);
+//                MainActivity.m_mainActivity.sendFrendRequest(id);
+//                MainActivity.m_mainActivity.addFrend(id);
                 m_menu.findItem(R.id.other_profile_addFriend).setIcon(R.drawable.delete_user);
             }else {
-                String id = getIntent().getStringExtra(MainActivity.m_mainActivity.ID);
-                MainActivity.m_mainActivity.deleteFrend(id);
+                String id = getIntent().getStringExtra(Database.ID);
+//                MainActivity.m_mainActivity.deleteFrend(id);
                 m_menu.findItem(R.id.other_profile_addFriend).setIcon(R.drawable.add_user);
             }
         }else if(item.getItemId() == R.id.other_profile_challengeRequest)

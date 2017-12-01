@@ -6,7 +6,7 @@ import java.security.PublicKey;
 public class Account {
 
     public final static String FACEBOOK = "Facebook";
-    public final static String GMAIL = "Gmail";
+    public final static String GOOGLE = "Google";
     public final static String TWITTER = "Twitter";
 
 
