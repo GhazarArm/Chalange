@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Database;
@@ -94,22 +95,22 @@ public class GuestActivity extends AppCompatActivity {
 
     public void initList()
     {
-//        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
-//        {
-//            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
-//            {
-//                Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
-//                postSnapshot.getRef().removeValue();
-//                m_accounts.add(acc);
-//                String dateString = postSnapshot.child(Events.EVENT_DATE).getValue(String.class);
-//
-//                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
-//                        acc.get_name() + "  " + acc.get_lastName(),
-//                        Integer.toString(acc.get_age()),
-//                        dateString,
-//                        acc.get_id());
-//            }
-//        }
+        for(DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountEventsDataSnapshot.getChildren())
+        {
+            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
+            {
+                Account acc = FirstActivity.m_database.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                postSnapshot.getRef().removeValue();
+                m_accounts.add(acc);
+                String dateString = postSnapshot.child(Events.EVENT_DATE).getValue(String.class);
+
+                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
+                        acc.get_name() + "  " + acc.get_lastName(),
+                        Integer.toString(acc.get_age()),
+                        dateString,
+                        acc.get_id());
+            }
+        }
     }
 
     @Override

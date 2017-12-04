@@ -4,7 +4,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ghazar.chalange.Activitys.MainActivity;
-import com.example.ghazar.chalange.FirstPage.FirstActivity;
+import com.example.ghazar.chalange.Tabs.Tag1;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -103,12 +103,11 @@ public class Database {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     m_AccountFrendsDataSnapshot = dataSnapshot;
-//                    m_frends = new Vector<String>();
-//                    for (DataSnapshot postSnapshot : dataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren()) {
-//                        String frendId = postSnapshot.getValue(String.class);
-//                        m_frends.add(frendId);
-//                    }
-//                    m_tab1.initListView(m_frends);
+                    try{
+                       MainActivity.m_mainActivity.initFrendsList();
+                    }catch (NullPointerException ex){
+                        Log.e("MY ERROR", ex.toString());
+                    }
                 }
 
                 @Override
@@ -123,18 +122,27 @@ public class Database {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     m_AccountEventsDataSnapshot = dataSnapshot;
-//                    badgeDrawable.setEvents((int) m_AccountEventsDataSnapshot.getChildrenCount() - 1);
-//
-//                    int frendRequestCount = 0;
-//                    int guestsCount = 0;
-//                    for (DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren()) {
-//                        if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
-//                            ++frendRequestCount;
-//                        else if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
-//                            ++guestsCount;
-//                    }
-//                    setMenuCounter(R.id.nav_frendRequest, frendRequestCount);
-//                    setMenuCounter(R.id.nav_guest, guestsCount);
+                    try{
+                        MainActivity.m_mainActivity.setBadgeDrawableCount((int) m_AccountEventsDataSnapshot.getChildrenCount() - 1);
+                    }catch (NullPointerException ex){
+                        Log.e("MY ERROR", ex.toString());
+                    }
+
+
+                    int frendRequestCount = 0;
+                    int guestsCount = 0;
+                    for (DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren()) {
+                        if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
+                            ++frendRequestCount;
+                        else if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
+                            ++guestsCount;
+                    }
+                    try {
+                        MainActivity.m_mainActivity.setFrendCounter(frendRequestCount);
+                        MainActivity.m_mainActivity.setGuestCounter(guestsCount);
+                    }catch (NullPointerException ex){
+                        Log.e("MY ERROR", ex.toString());
+                    }
                 }
 
                 @Override
@@ -219,10 +227,10 @@ public class Database {
     public Account getAccount(String id) {
         try {
             DataSnapshot postSnapshot = m_AccountDataSnapshot.child(id).child(MY_ACCOUNT_DATABASE_NAME);
-            String name = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
-            String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
-            int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
-            boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
+            String name = postSnapshot.child(NAME).getValue(String.class);
+            String lastName = postSnapshot.child(LAST_NAME).getValue(String.class);
+            int age = postSnapshot.child(AGE).getValue(int.class);
+            boolean gender = postSnapshot.child(GENDER).getValue(boolean.class);
             return new Account(name, lastName, age, gender, id);
         }catch (Exception ex){
             return null;
@@ -284,20 +292,27 @@ public class Database {
         return;
     }
 
+    public void sendGuestRequest(String idToAccount)
+    {
+        DatabaseReference toAccountEventsDatabase = m_accountsDB.child(MY_ACCOUNT_EVENTS_DATABASE_NAME).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
+        Events event = new Events(Events.ACCOUNT_GUEST_KEY, m_id);
+        toAccountEventsDatabase.push().setValue(event);
+    }
+
     public void addFrend(String id)
     {
-//        for(String accId : m_frends)
-//        {
-//            if(accId.equals(id))
-//                return;
-//        }
-//        m_frends.add(id);
-//        m_accountFrendsDB.child(Frends.FRENDS_VECTOR_KEY).setValue(m_frends);
+        for(DataSnapshot postSnapshot : m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
+        {
+            if(postSnapshot.getValue(String.class).equals(id))
+            {
+                return;
+            }
+        }
+        m_accountFrendsDB.child(Frends.FRENDS_VECTOR_KEY).push().setValue(id);
     }
 
     public void deleteFrend(String id)
     {
-//        m_frends.add(id);
         for(DataSnapshot postSnapshot : m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
         {
             if(postSnapshot.getValue(String.class).equals(id))
@@ -306,12 +321,5 @@ public class Database {
                 break;
             }
         }
-    }
-
-    public void sendGuestRequest(String idToAccount)
-    {
-        DatabaseReference toAccountEventsDatabase = m_accountsDB.child(MY_ACCOUNT_EVENTS_DATABASE_NAME).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
-        Events event = new Events(Events.ACCOUNT_GUEST_KEY, m_id);
-        toAccountEventsDatabase.push().setValue(event);
     }
 }

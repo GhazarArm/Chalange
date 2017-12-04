@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Database;
@@ -95,28 +96,29 @@ public class FrendRequestActivity extends AppCompatActivity {
     public void initList()
     {
         m_adapter.clear();
-//        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
-//        {
-//            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
-//            {
-//                int i = 0;
-//                for(i = 0; i < MainActivity.m_mainActivity.m_frends.size(); ++i)
-//                {
-//                    if(MainActivity.m_mainActivity.m_frends.get(i).equals(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class)))
-//                        continue;
-//                }
-//                if(i >= MainActivity.m_mainActivity.m_frends.size()) {
-//                    Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
-//                    m_accounts.add(acc);
-//                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName() + "+", Integer.toString(acc.get_age()), acc.get_id());
-//                }
-//                else{
-//                    Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
-//                    m_accounts.add(acc);
-//                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
-//                }
-//            }
-//        }
+        Vector<String> frends = FirstActivity.m_database.getAllFrends();
+        for(DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountEventsDataSnapshot.getChildren())
+        {
+            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
+            {
+                int i = 0;
+                for(i = 0; i < frends.size(); ++i)
+                {
+                    if(frends.get(i).equals(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class)))
+                        continue;
+                }
+                if(i >= frends.size()) {
+                    Account acc = FirstActivity.m_database.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                    m_accounts.add(acc);
+                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName() + "+", Integer.toString(acc.get_age()), acc.get_id());
+                }
+                else{
+                    Account acc = FirstActivity.m_database.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                    m_accounts.add(acc);
+                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
+                }
+            }
+        }
     }
 
     public void AddItem(int imageName, String text, String extraText, String id)

@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,14 +20,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ghazar.chalange.Dialogs.SearchDialog;
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.BadgeDrawerArrowDrawable;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Database;
+import com.example.ghazar.chalange.Objects.Events;
+import com.example.ghazar.chalange.Objects.Frends;
 import com.example.ghazar.chalange.R;
 import com.example.ghazar.chalange.Tabs.FragmentAdapter;
 import com.example.ghazar.chalange.Tabs.MyProfile;
 import com.example.ghazar.chalange.Tabs.Tag1;
 import com.example.ghazar.chalange.Tabs.Tag2;
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
@@ -51,8 +57,6 @@ public class MainActivity extends AppCompatActivity
 
     MenuItem m_searchItem;
     public SearchDialog m_searchDialog;
-
-    public Vector<String> m_frends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +125,7 @@ public class MainActivity extends AppCompatActivity
         boolean gender = intent.getBooleanExtra(Database.GENDER, true);
         m_curentAccount = new Account(first_name, last_name, age, gender, id);
         initNavigationHeader(first_name, last_name);
+        initCounter();
     }
 
     public void setTab1(Tag1 tab1) {
@@ -136,9 +141,42 @@ public class MainActivity extends AppCompatActivity
         m_myProfileTab.InitButtonsText();
     }
 
+    public void setBadgeDrawableCount(int count)
+    {
+        badgeDrawable.setEvents(count);
+    }
+
     public void initNavigationHeader(String name, String lastName){
         m_navigationHeaderTitle.setText(name + "  " + lastName);
         m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(name));
+    }
+
+    public void initFrendsList()
+    {
+        Vector<String> frends = new Vector<String>();
+        for (DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren()) {
+            String frendId = postSnapshot.getValue(String.class);
+            frends.add(frendId);
+        }
+        m_tab1.initListView(frends);
+    }
+
+    public void initCounter()
+    {
+        int frendRequestCount = 0;
+        int guestsCount = 0;
+        for (DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountEventsDataSnapshot.getChildren()) {
+            if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
+                ++frendRequestCount;
+            else if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
+                ++guestsCount;
+        }
+        try {
+            MainActivity.m_mainActivity.setFrendCounter(frendRequestCount);
+            MainActivity.m_mainActivity.setGuestCounter(guestsCount);
+        }catch (NullPointerException ex){
+            Log.e("MY ERROR", ex.toString());
+        }
     }
 
     public void goGuest(String id){
@@ -147,8 +185,13 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, 0);
     }
 
-    private void setMenuCounter(@IdRes int itemId, int count) {
-        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
+    public void setFrendCounter(int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(R.id.nav_frendRequest).getActionView();
+        view.setText(count > 0 ? String.valueOf(count) : null);
+    }
+
+    public void setGuestCounter(int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(R.id.nav_guest).getActionView();
         view.setText(count > 0 ? String.valueOf(count) : null);
     }
 

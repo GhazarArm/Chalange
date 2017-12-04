@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.Objects.Account;
@@ -82,7 +83,7 @@ public class Tag2 extends Fragment{
 
 
     public void SearchAccount(String name, int maxAge, int minAge){
-//        m_accounts = MainActivity.m_mainActivity.SearchAccount(name, maxAge, minAge);
+        m_accounts = FirstActivity.m_database.SearchAccount(name, maxAge, minAge);
         m_adapter.clear();
         initListView(m_accounts);
     }
