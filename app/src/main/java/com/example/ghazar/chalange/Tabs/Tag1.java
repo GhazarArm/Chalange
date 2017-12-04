@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.ghazar.chalange.Activitys.OtherProfileActivity;
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.Objects.Account;
@@ -33,6 +34,7 @@ public class Tag1 extends Fragment {
         m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewChallanges);
         m_adapter = new CustomListAdapter(getActivity(), R.layout.account_item);
         m_listViewFrends.setAdapter(m_adapter);
+        MainActivity.m_mainActivity.initFrendsList();
         m_listViewFrends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -54,7 +56,7 @@ public class Tag1 extends Fragment {
         m_adapter.clear();
         for(String id : accountsID)
         {
-            Account acc = MainActivity.m_mainActivity.getAccount(id);
+            Account acc = FirstActivity.m_database.getAccount(id);
             AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
                     acc.get_name() + "  " + acc.get_lastName(),
                     Integer.toString(acc.get_age()),

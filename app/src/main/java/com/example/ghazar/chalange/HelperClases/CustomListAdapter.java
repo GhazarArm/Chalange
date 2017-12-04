@@ -99,30 +99,30 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                     @Override
                     public void onClick(View v) {
                         String a = rowItem.getID();
-                        MainActivity.m_mainActivity.addFrend(a);
-                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
-                        {
-                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
-                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
-                                postSnapshot.getRef().removeValue();
-                                remove(rowItem);
-                                break;
-                            }
-                        }
+//                        MainActivity.m_mainActivity.addFrend(a);
+//                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
+//                        {
+//                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
+//                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
+//                                postSnapshot.getRef().removeValue();
+//                                remove(rowItem);
+//                                break;
+//                            }
+//                        }
                     }
                 });
                 m_accountItemWidgets.DeleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
-                        {
-                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
-                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
-                                postSnapshot.getRef().removeValue();
-                                remove(rowItem);
-                                break;
-                            }
-                        }
+//                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
+//                        {
+//                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
+//                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
+//                                postSnapshot.getRef().removeValue();
+//                                remove(rowItem);
+//                                break;
+//                            }
+//                        }
                     }
                 });
             }

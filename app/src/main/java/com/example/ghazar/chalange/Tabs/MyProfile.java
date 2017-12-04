@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.R;
 
 /**
@@ -103,7 +104,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    MainActivity.m_mainActivity.changeName(editText.getText().toString());
+                    FirstActivity.m_database.changeName(editText.getText().toString());
                     nameButton.setText(editText.getText().toString());
                 }
             });
@@ -125,7 +126,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    MainActivity.m_mainActivity.changeLastName(editText.getText().toString());
+                    FirstActivity.m_database.changeLastName(editText.getText().toString());
                     lastNameButton.setText(editText.getText().toString());
                 }
             });
@@ -176,7 +177,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    MainActivity.m_mainActivity.changeAge(ageSeekBar.getProgress());
+                    FirstActivity.m_database.changeAge(ageSeekBar.getProgress());
                     ageButton.setText(Integer.toString(ageSeekBar.getProgress()));
                 }
             });
@@ -193,7 +194,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            MainActivity.m_mainActivity.changeGender();
+                            FirstActivity.m_database.changeGender();
                             genderButton.setText(MainActivity.m_mainActivity.m_curentAccount.get_gender() ? "Male" : "Famel");
                             break;
 

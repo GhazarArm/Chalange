@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Activitys.OtherProfileActivity;
+import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.R;
 import com.example.ghazar.chalange.Objects.RowItem;
 
@@ -48,7 +50,7 @@ public class Tag2 extends Fragment{
             {
                 Account accountTo = m_accounts.elementAt(position);
                 Intent chatIntent = new Intent(getActivity(),  OtherProfileActivity.class);
-                chatIntent.putExtra(MainActivity.m_mainActivity.ID, accountTo.get_id());
+                chatIntent.putExtra(Database.ID, accountTo.get_id());
                 startActivityForResult(chatIntent, REQUEST_CODE_OF_CHAT_ACTIVITY);
             }
         });
@@ -81,7 +83,7 @@ public class Tag2 extends Fragment{
 
 
     public void SearchAccount(String name, int maxAge, int minAge){
-        m_accounts = MainActivity.m_mainActivity.SearchAccount(name, maxAge, minAge);
+        m_accounts = FirstActivity.m_database.SearchAccount(name, maxAge, minAge);
         m_adapter.clear();
         initListView(m_accounts);
     }

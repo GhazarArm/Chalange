@@ -2,6 +2,7 @@ package com.example.ghazar.chalange.Activitys;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -12,8 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Objects.Account;
+import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.Objects.Events;
 import com.example.ghazar.chalange.Objects.RowItem;
 import com.example.ghazar.chalange.R;
@@ -59,7 +62,7 @@ public class GuestActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 Intent intent = new Intent(m_guestActivity,  OtherProfileActivity.class);
-                intent.putExtra(MainActivity.m_mainActivity.ID, m_accounts.elementAt(position).get_id());
+                intent.putExtra(Database.ID, m_accounts.elementAt(position).get_id());
                 startActivityForResult(intent, 0);
             }
         });
@@ -92,11 +95,11 @@ public class GuestActivity extends AppCompatActivity {
 
     public void initList()
     {
-        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
+        for(DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountEventsDataSnapshot.getChildren())
         {
             if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
             {
-                Account acc = MainActivity.m_mainActivity.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                Account acc = FirstActivity.m_database.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                 postSnapshot.getRef().removeValue();
                 m_accounts.add(acc);
                 String dateString = postSnapshot.child(Events.EVENT_DATE).getValue(String.class);
