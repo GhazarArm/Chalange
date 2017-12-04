@@ -1,12 +1,19 @@
 package com.example.ghazar.chalange.FirstPage;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ghazar.chalange.Activitys.MainActivity;
@@ -34,9 +41,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +75,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     public static Database m_database;
 
+    private View mProgressView;
+    private View mLoginFormView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +85,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_first);
 
         m_database = new Database();
+
+        mProgressView = findViewById(R.id.login_progress);
+        mLoginFormView = findViewById(R.id.login_form);
 
         //////////////////////////////////////////////
         //////       SIGN IN VIA GMAIL          //////
@@ -146,6 +156,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
                                 curentId = id;
                                 m_database.setID(curentId);
+                                showProgress(true);
                                 Thread thread = new Thread(new MyRunnableForFacebookSignIn(first_name,
                                         last_name,
                                         age,
@@ -210,6 +221,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         if(isLogedIn()) {
+            showProgress(true);
             Thread thread = new Thread(new MyRunnableForSignIn(), "thread");
             thread.start();
             try{
@@ -326,6 +338,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
             curentId = id;
             m_database.setID(curentId);
+            showProgress(true);
             Thread thread = new Thread(new MyRunnableForGoogleSignIn(first_name, last_name, age, true, id), "thread");
         }
     }
@@ -333,6 +346,39 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
 
