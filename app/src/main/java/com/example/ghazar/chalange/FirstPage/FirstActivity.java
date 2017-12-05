@@ -163,11 +163,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                                         ((gender.startsWith("M") || gender.startsWith("m")) ? true : false),
                                         id), "thread");
                                 thread.start();
-                                try{
-                                    thread.join(2000);
-                                }catch (InterruptedException ex){
-                                    Log.e("MY ERROR", ex.toString());
-                                }
                             }
                         });
                 Bundle parameters = new Bundle();
@@ -195,8 +190,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         Button sineinphone = (Button) findViewById(R.id.sine_up_by_phone);
         sineinphone.setOnClickListener(this);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     }
 
     public boolean isLoggedInViaFacebook() {
@@ -224,11 +217,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             showProgress(true);
             Thread thread = new Thread(new MyRunnableForSignIn(), "thread");
             thread.start();
-            try{
-                thread.join(2000);
-            }catch (InterruptedException ex){
-                Log.e("MY ERROR", ex.toString());
-            }
         }
     }
 
@@ -334,12 +322,12 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 //            age = getAge(person.getBirthday());
             first_name = account.getGivenName();
             last_name = account.getFamilyName();
-            id = account.getId() + "Google";
+            id = account.getId() + Account.GOOGLE;
 
             curentId = id;
-            m_database.setID(curentId);
             showProgress(true);
             Thread thread = new Thread(new MyRunnableForGoogleSignIn(first_name, last_name, age, true, id), "thread");
+            thread.start();
         }
     }
 
@@ -386,7 +374,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void run() {
             try {
-                Thread.sleep(20000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -419,53 +407,62 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    class MyRunnableForGoogleSignIn implements Runnable{
+    class MyRunnableForGoogleSignIn implements Runnable {
         private String m_id = "-";
         private String m_firstName = "-";
         private String m_lastName = "-";
         private int m_age = 0;
         private boolean m_gender = true;
 
-        public MyRunnableForGoogleSignIn(String name, String lastName, int age, boolean gender, String id){
+        public MyRunnableForGoogleSignIn(String name, String lastName, int age, boolean gender, String id) {
             m_id = id;
             m_firstName = name;
             m_lastName = lastName;
             m_age = age;
             m_gender = gender;
         }
+
         @Override
         public void run() {
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while (true){
-                try{
-                    m_database.setID(curentId);
-                    break;
-                }catch (NullPointerException ex){
-                    Log.e("MY ERROR", ex.toString());
-                }
-            }
-            while(true){
-                try{
+            while (true) {
+                try {
                     Account acc = null;
-                    if(m_database.isAccountExist(curentId)) {
+                    if (m_database.isAccountExist(curentId)) {
+                        while (true) {
+                            try {
+                                Thread.sleep(1000);
+                                m_database.setID(curentId);
+                                break;
+                            } catch (NullPointerException ex) {
+                                Log.e("MY ERROR", ex.toString());
+                            }catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         acc = m_database.getAccount(curentId);
                         GoMainActivity(acc.get_name(),
                                 acc.get_lastName(),
                                 acc.get_age(),
                                 acc.get_gender(),
                                 curentId);
-                    }
-                    else{
+                    } else {
                         m_database.AddAccount(m_firstName, m_lastName, m_age, true, m_id);
+                        while (true) {
+                            try {
+                                Thread.sleep(1000);
+                                m_database.setID(curentId);
+                                break;
+                            } catch (NullPointerException ex) {
+                                Log.e("MY ERROR", ex.toString());
+                            }catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         GoMainActivity(m_firstName, m_lastName, m_age, true, m_id);
                     }
 
                     break;
-                }catch (NullPointerException ex){
+                } catch (NullPointerException ex) {
                     Log.e("MY ERROR", ex.toString());
                 }
             }
@@ -489,23 +486,21 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         public void run() {
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while (true){
-                try{
-                    m_database.setID(curentId);
-                    break;
-                }catch (NullPointerException ex){
-                    Log.e("MY ERROR", ex.toString());
-                }
-            }
             while(true) {
                 try {
                     Account acc = null;
                     if (m_database.isAccountExist(curentId)) {
+                        while (true){
+                            try{
+                                Thread.sleep(2000);
+                                m_database.setID(curentId);
+                                break;
+                            }catch (NullPointerException ex){
+                                Log.e("MY ERROR", ex.toString());
+                            }catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         acc = m_database.getAccount(curentId);
                         GoMainActivity(acc.get_name(),
                                 acc.get_lastName(),
@@ -514,6 +509,17 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                                 curentId);
                     } else {
                         m_database.AddAccount(m_firstName, m_lastName, m_age, m_gender, m_id);
+                        while (true){
+                            try{
+                                Thread.sleep(2000);
+                                m_database.setID(curentId);
+                                break;
+                            }catch (NullPointerException ex){
+                                Log.e("MY ERROR", ex.toString());
+                            }catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         GoMainActivity(m_firstName, m_lastName, m_age, m_gender, m_id);
                     }
                     break;
@@ -522,5 +528,12 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         }
+    }
+    public class TryAgainException extends Exception{
+        private String m_message;
+        public TryAgainException(String message){
+            m_message = message;
+        }
+        public String getMessage(){return m_message;}
     }
 }

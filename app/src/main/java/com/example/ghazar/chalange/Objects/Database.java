@@ -238,7 +238,7 @@ public class Database {
     }
 
     public boolean isAccountExist(String id) {
-        return m_AccountDataSnapshot.child(id) != null;
+        return m_AccountDataSnapshot.child(id).exists();
     }
 
     //<<<<<<<<<<<<<<<<<<<<<<< Change Parameters <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
