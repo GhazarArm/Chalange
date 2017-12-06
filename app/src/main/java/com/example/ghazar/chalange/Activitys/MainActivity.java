@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity
         try {
             MainActivity.m_mainActivity.setFrendCounter(frendRequestCount);
             MainActivity.m_mainActivity.setGuestCounter(guestsCount);
+            badgeDrawable.setEvents(guestsCount + frendRequestCount);
         }catch (NullPointerException ex){
             Log.e("MY ERROR", ex.toString());
         }

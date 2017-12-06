@@ -34,7 +34,9 @@
 
     <string name="frend_added_you_in_her_frend_list">I added you in my frends list)</string>
 
-    <!--rw-fwuqeiWUzTRmygwhq_aPu-->
-    <!--475877169961-gtmjchabmshq7glcshr3o9epas9a0q2q.apps.googleusercontent.com-->
+    <!--<resources>-->
+        <!--<string name="com.twitter.sdk.android.CONSUMER_KEY">SAA88uKZVjD33ms6kWnuPcD8m</string>-->
+        <!--<string name="com.twitter.sdk.android.CONSUMER_SECRET">L5AGXdRYjg27aA8OYBV4Id28lFDPf4E8dLpU6oOZsznJMCSV91</string>-->
+    <!--</resources>-->
 
 </resources>

@@ -122,33 +122,11 @@ public class Database {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     m_AccountEventsDataSnapshot = dataSnapshot;
-                    try{
+                    if(MainActivity.m_mainActivity != null)
                         MainActivity.m_mainActivity.setBadgeDrawableCount((int) m_AccountEventsDataSnapshot.getChildrenCount() - 1);
-                    }catch (NullPointerException ex){
-                        Log.e("MY ERROR", ex.toString());
-                    }
-
-
-                    int frendRequestCount = 0;
-                    int guestsCount = 0;
-                    for (DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren()) {
-                        if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
-                            ++frendRequestCount;
-                        else if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
-                            ++guestsCount;
-                    }
-                    try {
-                        MainActivity.m_mainActivity.setFrendCounter(frendRequestCount);
-                        MainActivity.m_mainActivity.setGuestCounter(guestsCount);
-                    }catch (NullPointerException ex){
-                        Log.e("MY ERROR", ex.toString());
-                    }
                 }
-
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
+                public void onCancelled(DatabaseError databaseError) {}
             });
         }
     }
@@ -294,7 +272,7 @@ public class Database {
 
     public void sendGuestRequest(String idToAccount)
     {
-        DatabaseReference toAccountEventsDatabase = m_accountsDB.child(MY_ACCOUNT_EVENTS_DATABASE_NAME).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
+        DatabaseReference toAccountEventsDatabase = m_accountsDB.child(idToAccount).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
         Events event = new Events(Events.ACCOUNT_GUEST_KEY, m_id);
         toAccountEventsDatabase.push().setValue(event);
     }
