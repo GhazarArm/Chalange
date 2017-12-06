@@ -1,5 +1,6 @@
 package com.example.ghazar.chalange.Activitys;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity
 
     public final int REQUEST_CODE_OF_FREND_REQUEST_ACTIVITY = 0;
     public final int REQUEST_CODE_OF_GUEST_ACTIVITY = 1;
+    public final int REQUEST_CODE_OF_CHALLANGE_ACTIVITY = 2;
 
     public static MainActivity m_mainActivity;
     public Account m_curentAccount;
@@ -194,6 +197,26 @@ public class MainActivity extends AppCompatActivity
     public void setGuestCounter(int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(R.id.nav_guest).getActionView();
         view.setText(count > 0 ? String.valueOf(count) : null);
+    }
+
+    public void startChallangeWith(String id){
+        Intent intent = new Intent(this, WaitingChallengeRequestActivity.class);
+        intent.putExtra(Database.ID, id);
+        startActivityForResult(intent, REQUEST_CODE_OF_CHALLANGE_ACTIVITY);
+        FirstActivity.m_database.sendChallangeRequest(id);
+    }
+
+    public void openChallangeRequestDialog(String id){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.challange_request_dialog);
+        FirstActivity.m_database.deleteEvent(id, Events.CHALANGE_REQUEST_EVENT_KEY);
+
+        Button accept = (Button)dialog.findViewById(R.id.accept_challange);
+        Button cancel = (Button)dialog.findViewById(R.id.cancel_challange);
+        TextView textView = (TextView)dialog.findViewById(R.id.challange_message);
+        Account acc = FirstActivity.m_database.getAccount(id);
+        textView.setText(acc.get_name() + "  " + acc.get_lastName()  + "  send you challange request");
+        dialog.show();
     }
 
     public int getIconId(String name)

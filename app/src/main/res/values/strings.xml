@@ -33,10 +33,11 @@
     <string name="title_activity_sine_in_via_facebook">Sign in</string>
 
     <string name="frend_added_you_in_her_frend_list">I added you in my frends list)</string>
+    <string name="title_activity_waiting_challenge_request">WaitingChallengeRequestActivity</string>
 
     <!--<resources>-->
-        <!--<string name="com.twitter.sdk.android.CONSUMER_KEY">SAA88uKZVjD33ms6kWnuPcD8m</string>-->
-        <!--<string name="com.twitter.sdk.android.CONSUMER_SECRET">L5AGXdRYjg27aA8OYBV4Id28lFDPf4E8dLpU6oOZsznJMCSV91</string>-->
+    <!--<string name="com.twitter.sdk.android.CONSUMER_KEY">SAA88uKZVjD33ms6kWnuPcD8m</string>-->
+    <!--<string name="com.twitter.sdk.android.CONSUMER_SECRET">L5AGXdRYjg27aA8OYBV4Id28lFDPf4E8dLpU6oOZsznJMCSV91</string>-->
     <!--</resources>-->
 
 </resources>

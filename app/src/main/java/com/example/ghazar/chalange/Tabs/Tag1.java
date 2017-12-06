@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.ghazar.chalange.Activitys.OtherProfileActivity;
+import com.example.ghazar.chalange.Activitys.WaitingChallengeRequestActivity;
 import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.CustomListAdapter;
 import com.example.ghazar.chalange.Activitys.MainActivity;
@@ -25,8 +26,6 @@ public class Tag1 extends Fragment {
     private View m_view;
     private ListView m_listViewFrends;
 
-    public final int REQUEST_CODE_OF_CHAT_ACTIVITY = 1;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +38,7 @@ public class Tag1 extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+                MainActivity.m_mainActivity.startChallangeWith(m_adapter.getItem(position).getID());
             }
         });
         return m_view;

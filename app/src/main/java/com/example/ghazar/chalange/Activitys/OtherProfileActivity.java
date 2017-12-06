@@ -34,7 +34,6 @@ public class OtherProfileActivity extends AppCompatActivity{
         String id = intent.getStringExtra(Database.ID);
         FirstActivity.m_database.sendGuestRequest(id);
 
-
         Account acc = FirstActivity.m_database.getAccount(id);
 
         Button nameButton = (Button) findViewById(R.id.other_profile_name_button);
@@ -93,8 +92,10 @@ public class OtherProfileActivity extends AppCompatActivity{
             }
         }else if(item.getItemId() == R.id.other_profile_challengeRequest)
         {
-
-        }
+            Intent intent = getIntent();
+            String id = intent.getStringExtra(Database.ID);
+            MainActivity.m_mainActivity.startChallangeWith(id);
+        };
         return super.onOptionsItemSelected(item);
     }
 

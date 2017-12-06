@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.Tabs.Tag1;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -122,12 +123,44 @@ public class Database {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     m_AccountEventsDataSnapshot = dataSnapshot;
+                    int frendRequestCount = 0;
+                    int guestRequestCount = 0;
+                    Vector<String> ids = new Vector<String>();
+                    int messageRequestCount = 0;
+                    for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                        if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
+                            ++frendRequestCount;
+                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
+                            ++guestRequestCount;
+                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.CHALANGE_REQUEST_EVENT_KEY)) {
+                            ids.add(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                        }
+                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.MESSAGE_REQUEST_EVENT_KEY))
+                            ++messageRequestCount;
+                    }
                     if(MainActivity.m_mainActivity != null)
-                        MainActivity.m_mainActivity.setBadgeDrawableCount((int) m_AccountEventsDataSnapshot.getChildrenCount() - 1);
+                        MainActivity.m_mainActivity.setBadgeDrawableCount(frendRequestCount + guestRequestCount);
+
+                    if(MainActivity.m_mainActivity != null){
+                        for(String str : ids)
+
+                            MainActivity.m_mainActivity.openChallangeRequestDialog(str);
+                    }
+
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {}
             });
+        }
+    }
+
+    public void deleteEvent(String id, String key){
+        for(DataSnapshot postSnapshot : m_AccountDataSnapshot.child(id).child(Database.MY_ACCOUNT_EVENTS_DATABASE_NAME).getChildren()){
+            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(key)
+                    && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(FirstActivity.m_database.m_id))
+            {
+                postSnapshot.getRef().removeValue();
+            }
         }
     }
 
@@ -274,6 +307,12 @@ public class Database {
     {
         DatabaseReference toAccountEventsDatabase = m_accountsDB.child(idToAccount).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
         Events event = new Events(Events.ACCOUNT_GUEST_KEY, m_id);
+        toAccountEventsDatabase.push().setValue(event);
+    }
+
+    public void sendChallangeRequest(String id){
+        DatabaseReference toAccountEventsDatabase = m_accountsDB.child(id).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
+        Events event = new Events(Events.CHALANGE_REQUEST_EVENT_KEY, m_id);
         toAccountEventsDatabase.push().setValue(event);
     }
 

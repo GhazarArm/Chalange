@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ghazar.chalange"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.ghazar.chalange">
 
+    <uses-sdk tools:overrideLibrary="android.support.v17.leanback" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -11,8 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-sdk tools:overrideLibrary="android.support.v17.leanback"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/fencing"
@@ -20,55 +19,42 @@
         android:roundIcon="@mipmap/fencing"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".FirstPage.FirstActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activitys.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FirstPage.SineUpActivity"
-            android:label="@string/title_activity_sine_up">
-        </activity>
-
+            android:label="@string/title_activity_sine_up" />
         <activity
             android:name=".FirstPage.LoginActivity"
-            android:label="@string/title_activity_login">
-        </activity>
-
+            android:label="@string/title_activity_login" />
         <activity android:name=".Activitys.OtherProfileActivity" />
-
         <activity
             android:name=".Activitys.GuestActivity"
-            android:label="Guests">
-        </activity>
-
-
-
+            android:label="Guests" />
         <activity
             android:name=".Activitys.FrendRequestActivity"
             android:label="Frend requests" />
-
-
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <activity android:name=".Activitys.WaitingChallengeRequestActivity"></activity>
     </application>
 
 </manifest>

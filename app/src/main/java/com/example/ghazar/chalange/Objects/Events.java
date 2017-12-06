@@ -19,13 +19,14 @@ public class Events {
     public final static String EVENT_DATE = "m_date";
 
     public final static String FREND_REQUEST_EVENT_KEY = "FrendRequest";
-
     public final static String CHALANGE_REQUEST_EVENT_KEY = "ChalangeRequest";
+    public final static String MESSAGE_REQUEST_EVENT_KEY = "MessageRequest";
+    public final static String ACCOUNT_GUEST_KEY = "AccountGuest";
 
     public final static String ACCOUNT_CREATED_EVENT_KEY = "AccountCreated";
     public final static String ACCOUNT_CREATED_EVENT_TEXT = "Hi))... your account was created";
 
-    public final static String ACCOUNT_GUEST_KEY = "AccountGuest";
+
 
     public Events(String eventKey, String eventText)
     {
