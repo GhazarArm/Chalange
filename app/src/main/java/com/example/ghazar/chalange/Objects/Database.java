@@ -46,8 +46,10 @@ public class Database {
     public DatabaseReference m_accountEventsDB = null;
     public DataSnapshot m_AccountEventsDataSnapshot = null;
 
+    public DatabaseReference m_GamesDB = m_db.child("Games");
+    public DataSnapshot m_GamesDataSnapshot = null;
 
-    String m_id = null;
+    public static String m_id = null;
 
     public Database() {
         m_accountsDB.addValueEventListener(new ValueEventListener() {
@@ -82,6 +84,14 @@ public class Database {
     public void setID(String id){
         m_id = id;
         getCurentAccountDatabas();
+    }
+
+    public void addGame(GameObject game){
+        m_GamesDB.child(game.getM_player1() + "VS" + game.getM_player2());
+    }
+
+    public void deleteGame(GameObject game){
+        m_GamesDB.child(game.getM_player1() + "VS" + game.getM_player2()).removeValue();
     }
 
     public void initDatabasesChangeEvent() {
@@ -142,9 +152,7 @@ public class Database {
                         MainActivity.m_mainActivity.setBadgeDrawableCount(frendRequestCount + guestRequestCount);
 
                     if(MainActivity.m_mainActivity != null){
-                        for(String str : ids)
-
-                            MainActivity.m_mainActivity.openChallangeRequestDialog(str);
+                            MainActivity.m_mainActivity.openChallangeRequestDialog(ids);
                     }
 
                 }

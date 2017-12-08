@@ -3,47 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/cancel_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:text="cancel all" />
 
-        <TextView
-            android:id="@+id/challange_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:textSize="36sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/accept_challange"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/side_nav_bar"
-                android:elevation="0dp"
-                android:text="Accept" />
-
-            <Button
-                android:id="@+id/cancel_challange"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/side_nav_bar"
-                android:elevation="0dp"
-                android:text="Cancel" />
-        </LinearLayout>
-
-    </LinearLayout>
-
+    <ListView
+        android:id="@+id/requests_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

@@ -15,11 +15,16 @@ import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.Objects.Events;
+import com.example.ghazar.chalange.Objects.GameObject;
 import com.example.ghazar.chalange.R;
+
+import org.w3c.dom.Text;
 
 public class WaitingChallengeRequestActivity extends AppCompatActivity {
 
     private String m_id;
+    private int m_time = 60;
+    public static GameObject m_game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +34,13 @@ public class WaitingChallengeRequestActivity extends AppCompatActivity {
         Intent intent = getIntent();
         m_id = intent.getStringExtra(Database.ID);
 
+        m_game = new GameObject(Database.m_id, m_id);
+        FirstActivity.m_database.addGame(m_game);
+
         Button cancelButton = (Button)findViewById(R.id.chalange_request_cancel_buttun);
         Button sendMessageButton = (Button)findViewById(R.id.message_send_button);
         final TextView  waitingText = (TextView)findViewById(R.id.waiting_text_view);
+        final TextView timeTextView = (TextView)findViewById(R.id.time_text_view);
         EditText sendTextEditText = (EditText)findViewById(R.id.message_send_edit_text);
 
         if(cancelButton != null){
@@ -64,15 +73,26 @@ public class WaitingChallengeRequestActivity extends AppCompatActivity {
                         break;
                 }
                 handler.postDelayed(this, 1000);
+                --m_time;
+                if(m_time<= 0){
+                    FirstActivity.m_database.deleteEvent(m_id, Events.CHALANGE_REQUEST_EVENT_KEY);
+                    Finish();
+                }
+                timeTextView.setText(String.valueOf(m_time));
             }
         }, 1000);
+    }
+
+    public void Finish(){
+        FirstActivity.m_database.deleteEvent(m_id, Events.CHALANGE_REQUEST_EVENT_KEY);
+        FirstActivity.m_database.deleteGame(m_game);
+        finish();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
 
-        FirstActivity.m_database.deleteEvent(m_id, Events.CHALANGE_REQUEST_EVENT_KEY);
-        finish();
+        Finish();
     }
 }

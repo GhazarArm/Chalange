@@ -4,10 +4,13 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,9 +24,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andremion.counterfab.CounterFab;
+import com.example.ghazar.chalange.Dialogs.ChallangeRequestDialog;
 import com.example.ghazar.chalange.Dialogs.SearchDialog;
 import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.HelperClases.BadgeDrawerArrowDrawable;
+import com.example.ghazar.chalange.HelperClases.MultiTouchListener;
 import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.Objects.Events;
@@ -57,15 +63,32 @@ public class MainActivity extends AppCompatActivity
     private TextView m_navigationHeaderTitle;
     private BadgeDrawerArrowDrawable badgeDrawable;
     private NavigationView navigationView;
+    private CounterFab m_fab;
 
     MenuItem m_searchItem;
     public SearchDialog m_searchDialog;
+    public ChallangeRequestDialog m_challangeDialog;
+
+    private float x;
+    private float y;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         m_mainActivity = this;
+
+        m_fab = (CounterFab) findViewById(R.id.fab);
+        m_fab.setCount(0);
+        m_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openChallangeRequestDialog();
+            }
+
+        });
+        MultiTouchListener touchListener=new MultiTouchListener();
+        m_fab.setOnTouchListener(touchListener);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -144,6 +167,11 @@ public class MainActivity extends AppCompatActivity
         m_myProfileTab.InitButtonsText();
     }
 
+    public void setChallnageEvents(Vector<String> ids){
+        m_fab.setCount(ids.size());
+        openChallangeRequestDialog(ids);
+    }
+
     public void setBadgeDrawableCount(int count)
     {
         badgeDrawable.setEvents(count);
@@ -206,17 +234,14 @@ public class MainActivity extends AppCompatActivity
         FirstActivity.m_database.sendChallangeRequest(id);
     }
 
-    public void openChallangeRequestDialog(String id){
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.challange_request_dialog);
-        FirstActivity.m_database.deleteEvent(id, Events.CHALANGE_REQUEST_EVENT_KEY);
-
-        Button accept = (Button)dialog.findViewById(R.id.accept_challange);
-        Button cancel = (Button)dialog.findViewById(R.id.cancel_challange);
-        TextView textView = (TextView)dialog.findViewById(R.id.challange_message);
-        Account acc = FirstActivity.m_database.getAccount(id);
-        textView.setText(acc.get_name() + "  " + acc.get_lastName()  + "  send you challange request");
-        dialog.show();
+    public void openChallangeRequestDialog(Vector<String> id){
+        if(m_challangeDialog == null){
+            m_challangeDialog = new ChallangeRequestDialog(this);
+            m_challangeDialog.initListView(id);
+            m_challangeDialog.show();
+        }else{
+            m_challangeDialog.initListView(id);
+        }
     }
 
     public int getIconId(String name)
@@ -292,6 +317,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         m_searchItem = (MenuItem)menu.findItem(R.id.action_search);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 

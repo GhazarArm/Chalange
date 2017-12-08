@@ -1,6 +1,7 @@
 package com.example.ghazar.chalange.HelperClases;
 
 import android.app.Activity;
+import android.media.Image;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.ghazar.chalange.Activitys.FrendRequestActivity;
 import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.Objects.Events;
 import com.example.ghazar.chalange.Objects.Frends;
 import com.example.ghazar.chalange.Objects.RowItem;
@@ -42,13 +44,19 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
 
     private class ViewHolderForAccountItem {
 
+        //For all
         ImageView imageView = null;
         TextView  txtTitle = null;
         TextView  txtDesc = null;
 
+        //For frend request activity
         ImageView AddFrendButton = null;
         ImageView DeleteButton = null;
-        TextView  FrendMessage;
+        TextView  FrendMessage = null;
+
+        //For challange resuest dialog
+        ImageView AcceptChallange = null;
+        ImageView CaneclChallange = null;
 
         TextView  EventTimeText = null;
 
@@ -99,30 +107,29 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                     @Override
                     public void onClick(View v) {
                         String a = rowItem.getID();
-//                        MainActivity.m_mainActivity.addFrend(a);
-//                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
-//                        {
-//                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
-//                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
-//                                postSnapshot.getRef().removeValue();
-//                                remove(rowItem);
-//                                break;
-//                            }
-//                        }
+                        for(DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountEventsDataSnapshot.getChildren())
+                        {
+                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
+                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
+                                postSnapshot.getRef().removeValue();
+                                remove(rowItem);
+                                break;
+                            }
+                        }
                     }
                 });
                 m_accountItemWidgets.DeleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        for(DataSnapshot postSnapshot : MainActivity.m_mainActivity.m_AccountEventsDataSnapshot.getChildren())
-//                        {
-//                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
-//                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
-//                                postSnapshot.getRef().removeValue();
-//                                remove(rowItem);
-//                                break;
-//                            }
-//                        }
+                        for(DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountEventsDataSnapshot.getChildren())
+                        {
+                            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
+                            && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
+                                postSnapshot.getRef().removeValue();
+                                remove(rowItem);
+                                break;
+                            }
+                        }
                     }
                 });
             }
@@ -134,6 +141,27 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_accountItemWidgets.imageView = (ImageView) view.findViewById(R.id.icon);
                 m_accountItemWidgets.EventTimeText = (TextView)view.findViewById(R.id.Time);
                 m_accountItemWidgets.EventTimeText.setText(rowItem.getTime());
+            }else if(m_itemId == R.layout.chalange_request_account_item) {
+                view = inflater.inflate(R.layout.chalange_request_account_item, null, true);
+                m_accountItemWidgets.txtDesc = (TextView) view.findViewById(R.id.Desc);
+                m_accountItemWidgets.txtTitle = (TextView) view.findViewById(R.id.title);
+                m_accountItemWidgets.imageView = (ImageView) view.findViewById(R.id.icon);
+                m_accountItemWidgets.AcceptChallange = (ImageView) view.findViewById(R.id.accept_challange_request_button);
+                m_accountItemWidgets.CaneclChallange = (ImageView) view.findViewById(R.id.cancel_challange_request_button);
+
+                m_accountItemWidgets.AcceptChallange.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                m_accountItemWidgets.CaneclChallange.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FirstActivity.m_database.deleteEvent(rowItem.getID(), Events.CHALANGE_REQUEST_EVENT_KEY);
+                    }
+                });
             }
             view.setTag(m_accountItemWidgets);
         }
