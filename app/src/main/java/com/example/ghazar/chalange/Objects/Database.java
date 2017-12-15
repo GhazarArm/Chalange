@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ghazar.chalange.Activitys.MainActivity;
+import com.example.ghazar.chalange.Activitys.WaitingChallengeRequestActivity;
 import com.example.ghazar.chalange.FirstPage.FirstActivity;
 import com.example.ghazar.chalange.Tabs.Tag1;
 import com.google.firebase.database.DataSnapshot;
@@ -87,11 +88,11 @@ public class Database {
     }
 
     public void addGame(GameObject game){
-        m_GamesDB.child(game.getM_player1() + "VS" + game.getM_player2());
+        m_GamesDB.child(game.m_gameID).setValue(game);
     }
 
     public void deleteGame(GameObject game){
-        m_GamesDB.child(game.getM_player1() + "VS" + game.getM_player2()).removeValue();
+        m_GamesDB.child(game.m_gameID).removeValue();
     }
 
     public void initDatabasesChangeEvent() {
@@ -135,24 +136,30 @@ public class Database {
                     m_AccountEventsDataSnapshot = dataSnapshot;
                     int frendRequestCount = 0;
                     int guestRequestCount = 0;
-                    Vector<String> ids = new Vector<String>();
+                    int challangeRequestCount = 0;
                     int messageRequestCount = 0;
                     for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
                         if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY))
                             ++frendRequestCount;
                         else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.ACCOUNT_GUEST_KEY))
                             ++guestRequestCount;
-                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.CHALANGE_REQUEST_EVENT_KEY)) {
-                            ids.add(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
-                        }
+                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.CHALANGE_REQUEST_EVENT_KEY))
+                            ++challangeRequestCount;
                         else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.MESSAGE_REQUEST_EVENT_KEY))
                             ++messageRequestCount;
+                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.CHALANGE_ACCEPT_REQUEST_EVENT_KEY))
+                            WaitingChallengeRequestActivity.m_this.challangeAcceptedBy(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+                        else if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.CHALANGE_CANCEL_REQUEST_EVENT_KEY))
+                            WaitingChallengeRequestActivity.m_this.challangeCanceledBy(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                     }
-                    if(MainActivity.m_mainActivity != null)
+                    if(MainActivity.m_mainActivity != null){
                         MainActivity.m_mainActivity.setBadgeDrawableCount(frendRequestCount + guestRequestCount);
+                        MainActivity.m_mainActivity.setFrendCounter(frendRequestCount);
+                        MainActivity.m_mainActivity.setGuestCounter(guestRequestCount);
+                    }
 
                     if(MainActivity.m_mainActivity != null){
-                            MainActivity.m_mainActivity.openChallangeRequestDialog(ids);
+                            MainActivity.m_mainActivity.setFabCount(challangeRequestCount);
                     }
 
                 }
@@ -162,10 +169,40 @@ public class Database {
         }
     }
 
+    public Vector<String> getChallangeRequests(){
+        Vector<String> vec = new Vector<String>();
+        for(DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren()) {
+            if (postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.CHALANGE_REQUEST_EVENT_KEY)) {
+                vec.add(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
+            }
+        }
+        return vec;
+    }
+
+    public int getChallangesRequestsCount(){
+        int count = 0;
+        for(DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren()){
+            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.CHALANGE_REQUEST_EVENT_KEY)) {
+                ++count;
+            }
+        }
+        return count;
+    }
+
     public void deleteEvent(String id, String key){
         for(DataSnapshot postSnapshot : m_AccountDataSnapshot.child(id).child(Database.MY_ACCOUNT_EVENTS_DATABASE_NAME).getChildren()){
             if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(key)
                     && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(FirstActivity.m_database.m_id))
+            {
+                postSnapshot.getRef().removeValue();
+            }
+        }
+    }
+
+    public void deleteMyEvents(String id, String key){
+        for(DataSnapshot postSnapshot : m_AccountEventsDataSnapshot.getChildren()){
+            if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(key)
+                    && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(id))
             {
                 postSnapshot.getRef().removeValue();
             }
@@ -321,6 +358,18 @@ public class Database {
     public void sendChallangeRequest(String id){
         DatabaseReference toAccountEventsDatabase = m_accountsDB.child(id).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
         Events event = new Events(Events.CHALANGE_REQUEST_EVENT_KEY, m_id);
+        toAccountEventsDatabase.push().setValue(event);
+    }
+
+    public void sendChallangeAcceptRequest(String id){
+        DatabaseReference toAccountEventsDatabase = m_accountsDB.child(id).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
+        Events event = new Events(Events.CHALANGE_ACCEPT_REQUEST_EVENT_KEY, m_id);
+        toAccountEventsDatabase.push().setValue(event);
+    }
+
+    public void sendChallangeCancelRequest(String id){
+        DatabaseReference toAccountEventsDatabase = m_accountsDB.child(id).child(MY_ACCOUNT_EVENTS_DATABASE_NAME);
+        Events event = new Events(Events.CHALANGE_CANCEL_REQUEST_EVENT_KEY, m_id);
         toAccountEventsDatabase.push().setValue(event);
     }
 

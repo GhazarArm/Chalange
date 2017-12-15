@@ -48,12 +48,12 @@ public class ChallangeRequestDialog extends Dialog implements View.OnClickListen
         m_adapter = new CustomListAdapter(MainActivity.m_mainActivity, R.layout.chalange_request_account_item);
         m_listView.setAdapter(m_adapter);
 
-        m_listView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        m_listView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ChallangeRequestDialog extends Dialog implements View.OnClickListen
         if(v.getId() == R.id.cancel_all)
         {
             for(String str : m_ids){
-                FirstActivity.m_database.deleteEvent(str, Events.CHALANGE_REQUEST_EVENT_KEY);
+                FirstActivity.m_database.deleteMyEvents(str, Events.CHALANGE_REQUEST_EVENT_KEY);
             }
         }
     }
@@ -74,7 +74,8 @@ public class ChallangeRequestDialog extends Dialog implements View.OnClickListen
             AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
                     acc.get_name() + "  " + acc.get_lastName(),
                     Integer.toString(acc.get_age()),
-                    acc.get_id());}
+                    acc.get_id());
+        }
     }
 
     public void AddItem(int imageName, String text, String extraText, String id)

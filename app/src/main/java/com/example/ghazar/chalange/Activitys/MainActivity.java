@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity
     private float x;
     private float y;
 
+    public String m_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         m_mainActivity = this;
 
         m_fab = (CounterFab) findViewById(R.id.fab);
-        m_fab.setCount(0);
+        m_fab.setCount(FirstActivity.m_database.getChallangesRequestsCount());
         m_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,12 +146,12 @@ public class MainActivity extends AppCompatActivity
         });
 
         Intent intent = getIntent();
-        String id = intent.getStringExtra(Database.NAME);
+        m_id = intent.getStringExtra(Database.NAME);
         String first_name = intent.getStringExtra(Database.NAME);
         String last_name = intent.getStringExtra(Database.LAST_NAME);
         int age = intent.getIntExtra(Database.AGE, 0);
         boolean gender = intent.getBooleanExtra(Database.GENDER, true);
-        m_curentAccount = new Account(first_name, last_name, age, gender, id);
+        m_curentAccount = new Account(first_name, last_name, age, gender, m_id);
         initNavigationHeader(first_name, last_name);
         initCounter();
     }
@@ -165,11 +167,6 @@ public class MainActivity extends AppCompatActivity
     public void setTabMyProfile(MyProfile myProfile) {
         m_myProfileTab = myProfile;
         m_myProfileTab.InitButtonsText();
-    }
-
-    public void setChallnageEvents(Vector<String> ids){
-        m_fab.setCount(ids.size());
-        openChallangeRequestDialog(ids);
     }
 
     public void setBadgeDrawableCount(int count)
@@ -234,12 +231,38 @@ public class MainActivity extends AppCompatActivity
         FirstActivity.m_database.sendChallangeRequest(id);
     }
 
-    public void openChallangeRequestDialog(Vector<String> id){
+    public void acceptChallangeWith(String id){
+        Intent intent = new Intent(this, WaitingChallengeRequestActivity.class);
+        intent.putExtra(Database.ID, id);
+        intent.putExtra("Accept", true);
+        startActivityForResult(intent, REQUEST_CODE_OF_CHALLANGE_ACTIVITY);
+        FirstActivity.m_database.sendChallangeAcceptRequest(id);
+        FirstActivity.m_database.deleteMyEvents(id, Events.CHALANGE_REQUEST_EVENT_KEY);
+    }
+
+    public void cancelChallangeWith(String id){
+        FirstActivity.m_database.sendChallangeCancelRequest(id);
+        FirstActivity.m_database.deleteMyEvents(id, Events.CHALANGE_REQUEST_EVENT_KEY);
+    }
+
+    public void openChallangeRequestDialog(){
+        Vector<String> id = FirstActivity.m_database.getChallangeRequests();
+        if(id.size() <= 0)
+            return;
         if(m_challangeDialog == null){
             m_challangeDialog = new ChallangeRequestDialog(this);
             m_challangeDialog.initListView(id);
             m_challangeDialog.show();
         }else{
+            m_challangeDialog.initListView(id);
+            m_challangeDialog.show();
+        }
+    }
+
+    public void setFabCount(int count){
+        m_fab.setCount(count);
+        if(m_challangeDialog != null){
+            Vector<String> id = FirstActivity.m_database.getChallangeRequests();
             m_challangeDialog.initListView(id);
         }
     }

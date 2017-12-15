@@ -141,7 +141,9 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_accountItemWidgets.imageView = (ImageView) view.findViewById(R.id.icon);
                 m_accountItemWidgets.EventTimeText = (TextView)view.findViewById(R.id.Time);
                 m_accountItemWidgets.EventTimeText.setText(rowItem.getTime());
-            }else if(m_itemId == R.layout.chalange_request_account_item) {
+            }
+            else if(m_itemId == R.layout.chalange_request_account_item)
+            {
                 view = inflater.inflate(R.layout.chalange_request_account_item, null, true);
                 m_accountItemWidgets.txtDesc = (TextView) view.findViewById(R.id.Desc);
                 m_accountItemWidgets.txtTitle = (TextView) view.findViewById(R.id.title);
@@ -152,14 +154,14 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_accountItemWidgets.AcceptChallange.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        MainActivity.m_mainActivity.acceptChallangeWith(rowItem.getID());
                     }
                 });
 
                 m_accountItemWidgets.CaneclChallange.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FirstActivity.m_database.deleteEvent(rowItem.getID(), Events.CHALANGE_REQUEST_EVENT_KEY);
+                        MainActivity.m_mainActivity.cancelChallangeWith(rowItem.getID());
                     }
                 });
             }

@@ -20,6 +20,8 @@ public class Events {
 
     public final static String FREND_REQUEST_EVENT_KEY = "FrendRequest";
     public final static String CHALANGE_REQUEST_EVENT_KEY = "ChalangeRequest";
+    public final static String CHALANGE_ACCEPT_REQUEST_EVENT_KEY = "ChalangeAcceptRequest";
+    public final static String CHALANGE_CANCEL_REQUEST_EVENT_KEY = "ChalangeCancelRequest";
     public final static String MESSAGE_REQUEST_EVENT_KEY = "MessageRequest";
     public final static String ACCOUNT_GUEST_KEY = "AccountGuest";
 

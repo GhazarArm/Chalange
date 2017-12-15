@@ -67,7 +67,6 @@ public class FrendRequestActivity extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.defoult_menu, menu);
@@ -107,7 +106,7 @@ public class FrendRequestActivity extends AppCompatActivity {
                     if(frends.get(i).equals(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class)))
                         continue;
                 }
-                if(i >= frends.size()) {
+                if(i < frends.size()) {
                     Account acc = FirstActivity.m_database.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                     m_accounts.add(acc);
                     AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName() + "+", Integer.toString(acc.get_age()), acc.get_id());
