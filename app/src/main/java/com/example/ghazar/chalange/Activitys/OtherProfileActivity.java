@@ -48,9 +48,6 @@ public class OtherProfileActivity extends AppCompatActivity{
         Button genderButton = (Button) findViewById(R.id.other_profile_gender_button);
         genderButton.setText(acc.get_gender() ? "Male" : "Famel");
 
-        ImageView imageView = (ImageView) findViewById(R.id.other_activity_image_view);
-        imageView.setImageResource(MainActivity.m_mainActivity.getIconId(acc.get_name()));
-
         m_isFriend = false;
         for(DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountFrendsDataSnapshot.child(Frends.FRENDS_VECTOR_KEY).getChildren())
         {

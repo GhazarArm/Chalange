@@ -12,6 +12,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Vector;
 
@@ -25,6 +27,7 @@ public class Database {
     public static String MY_ACCOUNT_FRENDS_DATABASE_NAME = "m_frends";
     public static String MY_ACCOUNT_EVENTS_DATABASE_NAME = "m_events";
 
+    public static String LEATERS_STORAGE_NAME = "Leaters";
 
     public static final String NAME = "_name";
     public static final String LAST_NAME = "_lastName";
@@ -34,6 +37,9 @@ public class Database {
 
 
     public static DatabaseReference m_db = FirebaseDatabase.getInstance().getReference();
+    public static FirebaseStorage   m_fStorage = FirebaseStorage.getInstance();
+    public static StorageReference  m_storage = m_fStorage.getReference();
+    public static StorageReference  m_leatersStorag = m_storage.child(LEATERS_STORAGE_NAME);
 
     public static DatabaseReference m_accountsDB = m_db.child("Accounts");
     public static DataSnapshot m_AccountDataSnapshot = null;
@@ -93,6 +99,13 @@ public class Database {
 
     public void deleteGame(GameObject game){
         m_GamesDB.child(game.m_gameID).removeValue();
+    }
+
+    public void sendMessage(String gameID, String text, int witchPlayer /*if witchPlayer == 1 => send firstPlayer if witchPlayer == 2 send second player*/){
+        if(witchPlayer == 1)
+            m_GamesDB.child(gameID).child(GameObject.PLAYER1_MESSAGE_KEY).setValue(text);
+        else if(witchPlayer == 2)
+            m_GamesDB.child(gameID).child(GameObject.PLAYER2_MESSAGE_KEY).setValue(text);
     }
 
     public void initDatabasesChangeEvent() {

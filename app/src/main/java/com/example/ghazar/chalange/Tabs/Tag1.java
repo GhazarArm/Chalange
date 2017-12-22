@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.annotation.Nullable;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.ghazar.chalange.Activitys.OtherProfileActivity;
@@ -64,7 +65,7 @@ public class Tag1 extends Fragment {
         }
     }
 
-    public void AddItem(int imageName, String text, String extraText, String id)
+    public void AddItem(ImageView imageName, String text, String extraText, String id)
     {
         RowItem rowItem = new RowItem(imageName, text, extraText, id);
         m_adapter.add(rowItem);

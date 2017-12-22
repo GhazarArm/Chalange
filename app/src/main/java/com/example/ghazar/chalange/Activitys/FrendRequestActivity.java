@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.ghazar.chalange.FirstPage.FirstActivity;
@@ -120,7 +121,7 @@ public class FrendRequestActivity extends AppCompatActivity {
         }
     }
 
-    public void AddItem(int imageName, String text, String extraText, String id)
+    public void AddItem(ImageView imageName, String text, String extraText, String id)
     {
         RowItem rowItem = new RowItem(imageName, text, extraText, id);
         m_adapter.add(rowItem);

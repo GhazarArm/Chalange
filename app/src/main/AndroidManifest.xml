@@ -57,7 +57,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".Activitys.WaitingChallengeRequestActivity"></activity>
+        <activity android:name=".Activitys.WaitingChallengeRequestActivity">
+        </activity>
     </application>
 
 </manifest>

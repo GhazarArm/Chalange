@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 
@@ -78,7 +79,7 @@ public class ChallangeRequestDialog extends Dialog implements View.OnClickListen
         }
     }
 
-    public void AddItem(int imageName, String text, String extraText, String id)
+    public void AddItem(ImageView imageName, String text, String extraText, String id)
     {
         RowItem rowItem = new RowItem(imageName, text, extraText, id);
         m_adapter.add(rowItem);

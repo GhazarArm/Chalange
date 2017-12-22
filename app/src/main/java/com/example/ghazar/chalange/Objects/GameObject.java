@@ -5,6 +5,8 @@ public class GameObject {
     public static String PLAYER2_KEY = "m_player2";
     public static String PLAYER1_ACCEPT_KEY = "m_acceptPlayer1";
     public static String PLAYER2_ACCEPT_KEY = "m_acceptPlayer2";
+    public static String PLAYER1_MESSAGE_KEY = "m_player1Message";
+    public static String PLAYER2_MESSAGE_KEY = "m_player2Message";
 
     public static int WAITING = 0;
     public static int ACCEPTED = 1;
@@ -15,6 +17,8 @@ public class GameObject {
     public String m_gameID;
     private int m_acceptPlayer1;
     private int m_acceptPlayer2;
+    private String m_player1Message;
+    private String m_player2Message;
 
     public GameObject(String p1, String p2){
         m_player1 = p1;
@@ -22,6 +26,8 @@ public class GameObject {
         m_acceptPlayer1 = WAITING;
         m_acceptPlayer2 = WAITING;
         m_gameID = m_player1 + "VS" + m_player2;
+        m_player1Message = "";
+        m_player2Message = "";
     }
 
     public void setM_acceptPlayer1(int m_acceptPlayer1) {
@@ -55,5 +61,21 @@ public class GameObject {
 
     public void setM_player2(String m_player2) {
         this.m_player2 = m_player2;
+    }
+
+    public void setM_player1Message(String m_player1Message) {
+        this.m_player1Message = m_player1Message;
+    }
+
+    public void setM_player2Message(String m_player2Message) {
+        this.m_player2Message = m_player2Message;
+    }
+
+    public String getM_player1Message() {
+        return m_player1Message;
+    }
+
+    public String getM_player2Message() {
+        return m_player2Message;
     }
 }

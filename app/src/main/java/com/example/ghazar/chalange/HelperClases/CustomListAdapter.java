@@ -1,6 +1,7 @@
 package com.example.ghazar.chalange.HelperClases;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -27,9 +28,6 @@ import com.google.firebase.database.DataSnapshot;
 
 public class CustomListAdapter extends ArrayAdapter<RowItem>{
     private final Activity m_context;
-    private String m_text;
-    private String m_extraText;
-    private int m_imageName;
     private int m_itemId;
 
     public ViewHolderForAccountItem m_accountItemWidgets;
@@ -171,9 +169,11 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 m_accountItemWidgets = (ViewHolderForAccountItem)view.getTag();
         }
 
-            m_accountItemWidgets.txtDesc.setText(rowItem.getDesc());
-            m_accountItemWidgets.txtTitle.setText(rowItem.getTitle());
-            m_accountItemWidgets.imageView.setImageResource(rowItem.getImageId());
+        m_accountItemWidgets.txtDesc.setText(rowItem.getDesc());
+        m_accountItemWidgets.txtTitle.setText(rowItem.getTitle());
+        ImageView image = rowItem.getImageId();
+        Drawable d = image.getDrawable();
+        m_accountItemWidgets.imageView.setImageDrawable(d);
 
         return view;
     };

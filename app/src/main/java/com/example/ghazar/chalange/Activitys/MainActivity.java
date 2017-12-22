@@ -2,8 +2,11 @@ package com.example.ghazar.chalange.Activitys;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -25,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andremion.counterfab.CounterFab;
+import com.bumptech.glide.Glide;
 import com.example.ghazar.chalange.Dialogs.ChallangeRequestDialog;
 import com.example.ghazar.chalange.Dialogs.SearchDialog;
 import com.example.ghazar.chalange.FirstPage.FirstActivity;
@@ -34,12 +38,17 @@ import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.Objects.Events;
 import com.example.ghazar.chalange.Objects.Frends;
+import com.example.ghazar.chalange.Objects.GameObject;
 import com.example.ghazar.chalange.R;
 import com.example.ghazar.chalange.Tabs.FragmentAdapter;
 import com.example.ghazar.chalange.Tabs.MyProfile;
 import com.example.ghazar.chalange.Tabs.Tag1;
 import com.example.ghazar.chalange.Tabs.Tag2;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Vector;
 
@@ -94,7 +103,7 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.a);
+//        toolbar.setNavigationIcon(R.drawable.a);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -146,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         Intent intent = getIntent();
-        m_id = intent.getStringExtra(Database.NAME);
+        m_id = intent.getStringExtra(Database.ID);
         String first_name = intent.getStringExtra(Database.NAME);
         String last_name = intent.getStringExtra(Database.LAST_NAME);
         int age = intent.getIntExtra(Database.AGE, 0);
@@ -176,7 +185,10 @@ public class MainActivity extends AppCompatActivity
 
     public void initNavigationHeader(String name, String lastName){
         m_navigationHeaderTitle.setText(name + "  " + lastName);
-        m_navigationHeadericon.setImageResource(m_mainActivity.getIconId(name));
+        ImageView image = new ImageView(getApplicationContext());
+        image = getIconId(m_curentAccount.get_name());
+        Drawable d = image.getDrawable();
+        m_navigationHeadericon.setImageDrawable(d);
     }
 
     public void initFrendsList()
@@ -267,64 +279,130 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public int getIconId(String name)
-    {
+    public ImageView getIconId(String name){
+        ImageView image = new ImageView(getApplicationContext());
+        StorageReference imageRef;
         switch (name.charAt(0)) {
-            case 'a' : return R.drawable.a;
-            case 'A' : return R.drawable.a;
-            case 'b' : return R.drawable.b;
-            case 'B' : return R.drawable.b;
-            case 'c' : return R.drawable.c;
-            case 'C' : return R.drawable.c;
-            case 'd' : return R.drawable.d;
-            case 'D' : return R.drawable.d;
-            case 'e' : return R.drawable.e;
-            case 'E' : return R.drawable.e;
-            case 'f' : return R.drawable.f;
-            case 'F' : return R.drawable.f;
-            case 'g' : return R.drawable.g;
-            case 'G' : return R.drawable.g;
-            case 'h' : return R.drawable.h;
-            case 'H' : return R.drawable.h;
-            case 'i' : return R.drawable.i;
-            case 'I' : return R.drawable.i;
-            case 'j' : return R.drawable.j;
-            case 'J' : return R.drawable.j;
-            case 'k' : return R.drawable.k;
-            case 'K' : return R.drawable.k;
-            case 'l' : return R.drawable.l;
-            case 'L' : return R.drawable.l;
-            case 'm' : return R.drawable.m;
-            case 'M' : return R.drawable.m;
-            case 'n' : return R.drawable.n;
-            case 'N' : return R.drawable.n;
-            case 'o' : return R.drawable.o;
-            case 'O' : return R.drawable.o;
-            case 'p' : return R.drawable.p;
-            case 'P' : return R.drawable.p;
-            case 'q' : return R.drawable.q;
-            case 'Q' : return R.drawable.q;
-            case 'r' : return R.drawable.r;
-            case 'R' : return R.drawable.r;
-            case 's' : return R.drawable.s;
-            case 'S' : return R.drawable.s;
-            case 't' : return R.drawable.t;
-            case 'T' : return R.drawable.t;
-            case 'u' : return R.drawable.u;
-            case 'U' : return R.drawable.u;
-            case 'v' : return R.drawable.v;
-            case 'V' : return R.drawable.v;
-            case 'w' : return R.drawable.w;
-            case 'W' : return R.drawable.w;
-            case 'x' : return R.drawable.x;
-            case 'X' : return R.drawable.x;
-            case 'y' : return R.drawable.y;
-            case 'Y' : return R.drawable.y;
-            case 'z' : return R.drawable.z;
-            case 'Z' : return R.drawable.z;
-            default:   return R.drawable.ic_menu_slideshow;
+            case 'a' : imageRef = FirstActivity.m_database.m_leatersStorag.child("a.png"); break;
+            case 'A' : imageRef = FirstActivity.m_database.m_leatersStorag.child("a.png"); break;
+            case 'b' : imageRef = FirstActivity.m_database.m_leatersStorag.child("b.png"); break;
+            case 'B' : imageRef = FirstActivity.m_database.m_leatersStorag.child("b.png"); break;
+            case 'c' : imageRef = FirstActivity.m_database.m_leatersStorag.child("c.png"); break;
+            case 'C' : imageRef = FirstActivity.m_database.m_leatersStorag.child("c.png"); break;
+            case 'd' : imageRef = FirstActivity.m_database.m_leatersStorag.child("d.png"); break;
+            case 'D' : imageRef = FirstActivity.m_database.m_leatersStorag.child("d.png"); break;
+            case 'e' : imageRef = FirstActivity.m_database.m_leatersStorag.child("e.png"); break;
+            case 'E' : imageRef = FirstActivity.m_database.m_leatersStorag.child("e.png"); break;
+            case 'f' : imageRef = FirstActivity.m_database.m_leatersStorag.child("f.png"); break;
+            case 'F' : imageRef = FirstActivity.m_database.m_leatersStorag.child("f.png"); break;
+            case 'g' : imageRef = FirstActivity.m_database.m_leatersStorag.child("g.png"); break;
+            case 'G' : imageRef = FirstActivity.m_database.m_leatersStorag.child("g.png"); break;
+            case 'h' : imageRef = FirstActivity.m_database.m_leatersStorag.child("h.png"); break;
+            case 'H' : imageRef = FirstActivity.m_database.m_leatersStorag.child("h.png"); break;
+            case 'i' : imageRef = FirstActivity.m_database.m_leatersStorag.child("i.png"); break;
+            case 'I' : imageRef = FirstActivity.m_database.m_leatersStorag.child("i.png"); break;
+            case 'j' : imageRef = FirstActivity.m_database.m_leatersStorag.child("j.png"); break;
+            case 'J' : imageRef = FirstActivity.m_database.m_leatersStorag.child("j.png"); break;
+            case 'k' : imageRef = FirstActivity.m_database.m_leatersStorag.child("k.png"); break;
+            case 'K' : imageRef = FirstActivity.m_database.m_leatersStorag.child("k.png"); break;
+            case 'l' : imageRef = FirstActivity.m_database.m_leatersStorag.child("l.png"); break;
+            case 'L' : imageRef = FirstActivity.m_database.m_leatersStorag.child("l.png"); break;
+            case 'm' : imageRef = FirstActivity.m_database.m_leatersStorag.child("m.png"); break;
+            case 'M' : imageRef = FirstActivity.m_database.m_leatersStorag.child("m.png"); break;
+            case 'n' : imageRef = FirstActivity.m_database.m_leatersStorag.child("n.png"); break;
+            case 'N' : imageRef = FirstActivity.m_database.m_leatersStorag.child("n.png"); break;
+            case 'o' : imageRef = FirstActivity.m_database.m_leatersStorag.child("o.png"); break;
+            case 'O' : imageRef = FirstActivity.m_database.m_leatersStorag.child("o.png"); break;
+            case 'p' : imageRef = FirstActivity.m_database.m_leatersStorag.child("p.png"); break;
+            case 'P' : imageRef = FirstActivity.m_database.m_leatersStorag.child("p.png"); break;
+            case 'q' : imageRef = FirstActivity.m_database.m_leatersStorag.child("q.png"); break;
+            case 'Q' : imageRef = FirstActivity.m_database.m_leatersStorag.child("q.png"); break;
+            case 'r' : imageRef = FirstActivity.m_database.m_leatersStorag.child("r.png"); break;
+            case 'R' : imageRef = FirstActivity.m_database.m_leatersStorag.child("r.png"); break;
+            case 's' : imageRef = FirstActivity.m_database.m_leatersStorag.child("s.png"); break;
+            case 'S' : imageRef = FirstActivity.m_database.m_leatersStorag.child("s.png"); break;
+            case 't' : imageRef = FirstActivity.m_database.m_leatersStorag.child("t.png"); break;
+            case 'T' : imageRef = FirstActivity.m_database.m_leatersStorag.child("t.png"); break;
+            case 'u' : imageRef = FirstActivity.m_database.m_leatersStorag.child("u.png"); break;
+            case 'U' : imageRef = FirstActivity.m_database.m_leatersStorag.child("u.png"); break;
+            case 'v' : imageRef = FirstActivity.m_database.m_leatersStorag.child("v.png"); break;
+            case 'V' : imageRef = FirstActivity.m_database.m_leatersStorag.child("v.png"); break;
+            case 'w' : imageRef = FirstActivity.m_database.m_leatersStorag.child("w.png"); break;
+            case 'W' : imageRef = FirstActivity.m_database.m_leatersStorag.child("w.png"); break;
+            case 'x' : imageRef = FirstActivity.m_database.m_leatersStorag.child("x.png"); break;
+            case 'X' : imageRef = FirstActivity.m_database.m_leatersStorag.child("x.png"); break;
+            case 'y' : imageRef = FirstActivity.m_database.m_leatersStorag.child("y.png"); break;
+            case 'Y' : imageRef = FirstActivity.m_database.m_leatersStorag.child("y.png"); break;
+            case 'z' : imageRef = FirstActivity.m_database.m_leatersStorag.child("z.png"); break;
+            case 'Z' : imageRef = FirstActivity.m_database.m_leatersStorag.child("z.png"); break;
+            default:   imageRef = FirstActivity.m_database.m_leatersStorag.child("a.png"); break;
         }
+        Glide.with(getApplicationContext())
+                .using(new FirebaseImageLoader())
+                .load(imageRef)
+                .into(image);
+
+        return image;
     }
+
+//    public int getIconId(String name)
+//    {
+//        switch (name.charAt(0)) {
+//            case 'a' : return R.drawable.a;
+//            case 'A' : return R.drawable.a;
+//            case 'b' : return R.drawable.b;
+//            case 'B' : return R.drawable.b;
+//            case 'c' : return R.drawable.c;
+//            case 'C' : return R.drawable.c;
+//            case 'd' : return R.drawable.d;
+//            case 'D' : return R.drawable.d;
+//            case 'e' : return R.drawable.e;
+//            case 'E' : return R.drawable.e;
+//            case 'f' : return R.drawable.f;
+//            case 'F' : return R.drawable.f;
+//            case 'g' : return R.drawable.g;
+//            case 'G' : return R.drawable.g;
+//            case 'h' : return R.drawable.h;
+//            case 'H' : return R.drawable.h;
+//            case 'i' : return R.drawable.i;
+//            case 'I' : return R.drawable.i;
+//            case 'j' : return R.drawable.j;
+//            case 'J' : return R.drawable.j;
+//            case 'k' : return R.drawable.k;
+//            case 'K' : return R.drawable.k;
+//            case 'l' : return R.drawable.l;
+//            case 'L' : return R.drawable.l;
+//            case 'm' : return R.drawable.m;
+//            case 'M' : return R.drawable.m;
+//            case 'n' : return R.drawable.n;
+//            case 'N' : return R.drawable.n;
+//            case 'o' : return R.drawable.o;
+//            case 'O' : return R.drawable.o;
+//            case 'p' : return R.drawable.p;
+//            case 'P' : return R.drawable.p;
+//            case 'q' : return R.drawable.q;
+//            case 'Q' : return R.drawable.q;
+//            case 'r' : return R.drawable.r;
+//            case 'R' : return R.drawable.r;
+//            case 's' : return R.drawable.s;
+//            case 'S' : return R.drawable.s;
+//            case 't' : return R.drawable.t;
+//            case 'T' : return R.drawable.t;
+//            case 'u' : return R.drawable.u;
+//            case 'U' : return R.drawable.u;
+//            case 'v' : return R.drawable.v;
+//            case 'V' : return R.drawable.v;
+//            case 'w' : return R.drawable.w;
+//            case 'W' : return R.drawable.w;
+//            case 'x' : return R.drawable.x;
+//            case 'X' : return R.drawable.x;
+//            case 'y' : return R.drawable.y;
+//            case 'Y' : return R.drawable.y;
+//            case 'z' : return R.drawable.z;
+//            case 'Z' : return R.drawable.z;
+//            default:   return R.drawable.ic_menu_slideshow;
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

@@ -1,20 +1,22 @@
 package com.example.ghazar.chalange.Objects;
 
+import android.widget.ImageView;
+
 public class RowItem {
-    private int imageId;
+    private ImageView imageId;
     private String title;
     private String desc;
     private String ID;
     private String time;
 
-    public RowItem(int imageId, String title, String desc, String id) {
+    public RowItem(ImageView imageId, String title, String desc, String id) {
         this.imageId = imageId;
         this.title = title;
         this.desc = desc;
         ID = id;
     }
 
-    public RowItem(int imageId, String title, String desc, String time, String id) {
+    public RowItem(ImageView imageId, String title, String desc, String time, String id) {
         this.imageId = imageId;
         this.title = title;
         this.desc = desc;
@@ -28,10 +30,10 @@ public class RowItem {
     public void setID(String id) {
         this.ID = id;
     }
-    public int getImageId() {
+    public ImageView getImageId() {
         return imageId;
     }
-    public void setImageId(int imageId) {
+    public void setImageId(ImageView imageId) {
         this.imageId = imageId;
     }
     public String getDesc() {
