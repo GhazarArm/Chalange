@@ -1,19 +1,12 @@
 package com.example.ghazar.chalange.Activitys;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,15 +30,12 @@ import com.example.ghazar.chalange.Objects.Account;
 import com.example.ghazar.chalange.Objects.Database;
 import com.example.ghazar.chalange.Objects.Events;
 import com.example.ghazar.chalange.Objects.Frends;
-import com.example.ghazar.chalange.Objects.GameObject;
 import com.example.ghazar.chalange.R;
 import com.example.ghazar.chalange.Tabs.FragmentAdapter;
 import com.example.ghazar.chalange.Tabs.MyProfile;
 import com.example.ghazar.chalange.Tabs.Tag1;
 import com.example.ghazar.chalange.Tabs.Tag2;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.storage.StorageReference;
 
@@ -185,10 +174,7 @@ public class MainActivity extends AppCompatActivity
 
     public void initNavigationHeader(String name, String lastName){
         m_navigationHeaderTitle.setText(name + "  " + lastName);
-        ImageView image = new ImageView(getApplicationContext());
-        image = getIconId(m_curentAccount.get_name());
-        Drawable d = image.getDrawable();
-        m_navigationHeadericon.setImageDrawable(d);
+        getIcon(name, m_navigationHeadericon);
     }
 
     public void initFrendsList()
@@ -279,70 +265,68 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public ImageView getIconId(String name){
-        ImageView image = new ImageView(getApplicationContext());
-        StorageReference imageRef;
+    public void getIcon(String name, ImageView image){
+        String url;
+        if(image == null)
+            image = new ImageView(getApplicationContext());
         switch (name.charAt(0)) {
-            case 'a' : imageRef = FirstActivity.m_database.m_leatersStorag.child("a.png"); break;
-            case 'A' : imageRef = FirstActivity.m_database.m_leatersStorag.child("a.png"); break;
-            case 'b' : imageRef = FirstActivity.m_database.m_leatersStorag.child("b.png"); break;
-            case 'B' : imageRef = FirstActivity.m_database.m_leatersStorag.child("b.png"); break;
-            case 'c' : imageRef = FirstActivity.m_database.m_leatersStorag.child("c.png"); break;
-            case 'C' : imageRef = FirstActivity.m_database.m_leatersStorag.child("c.png"); break;
-            case 'd' : imageRef = FirstActivity.m_database.m_leatersStorag.child("d.png"); break;
-            case 'D' : imageRef = FirstActivity.m_database.m_leatersStorag.child("d.png"); break;
-            case 'e' : imageRef = FirstActivity.m_database.m_leatersStorag.child("e.png"); break;
-            case 'E' : imageRef = FirstActivity.m_database.m_leatersStorag.child("e.png"); break;
-            case 'f' : imageRef = FirstActivity.m_database.m_leatersStorag.child("f.png"); break;
-            case 'F' : imageRef = FirstActivity.m_database.m_leatersStorag.child("f.png"); break;
-            case 'g' : imageRef = FirstActivity.m_database.m_leatersStorag.child("g.png"); break;
-            case 'G' : imageRef = FirstActivity.m_database.m_leatersStorag.child("g.png"); break;
-            case 'h' : imageRef = FirstActivity.m_database.m_leatersStorag.child("h.png"); break;
-            case 'H' : imageRef = FirstActivity.m_database.m_leatersStorag.child("h.png"); break;
-            case 'i' : imageRef = FirstActivity.m_database.m_leatersStorag.child("i.png"); break;
-            case 'I' : imageRef = FirstActivity.m_database.m_leatersStorag.child("i.png"); break;
-            case 'j' : imageRef = FirstActivity.m_database.m_leatersStorag.child("j.png"); break;
-            case 'J' : imageRef = FirstActivity.m_database.m_leatersStorag.child("j.png"); break;
-            case 'k' : imageRef = FirstActivity.m_database.m_leatersStorag.child("k.png"); break;
-            case 'K' : imageRef = FirstActivity.m_database.m_leatersStorag.child("k.png"); break;
-            case 'l' : imageRef = FirstActivity.m_database.m_leatersStorag.child("l.png"); break;
-            case 'L' : imageRef = FirstActivity.m_database.m_leatersStorag.child("l.png"); break;
-            case 'm' : imageRef = FirstActivity.m_database.m_leatersStorag.child("m.png"); break;
-            case 'M' : imageRef = FirstActivity.m_database.m_leatersStorag.child("m.png"); break;
-            case 'n' : imageRef = FirstActivity.m_database.m_leatersStorag.child("n.png"); break;
-            case 'N' : imageRef = FirstActivity.m_database.m_leatersStorag.child("n.png"); break;
-            case 'o' : imageRef = FirstActivity.m_database.m_leatersStorag.child("o.png"); break;
-            case 'O' : imageRef = FirstActivity.m_database.m_leatersStorag.child("o.png"); break;
-            case 'p' : imageRef = FirstActivity.m_database.m_leatersStorag.child("p.png"); break;
-            case 'P' : imageRef = FirstActivity.m_database.m_leatersStorag.child("p.png"); break;
-            case 'q' : imageRef = FirstActivity.m_database.m_leatersStorag.child("q.png"); break;
-            case 'Q' : imageRef = FirstActivity.m_database.m_leatersStorag.child("q.png"); break;
-            case 'r' : imageRef = FirstActivity.m_database.m_leatersStorag.child("r.png"); break;
-            case 'R' : imageRef = FirstActivity.m_database.m_leatersStorag.child("r.png"); break;
-            case 's' : imageRef = FirstActivity.m_database.m_leatersStorag.child("s.png"); break;
-            case 'S' : imageRef = FirstActivity.m_database.m_leatersStorag.child("s.png"); break;
-            case 't' : imageRef = FirstActivity.m_database.m_leatersStorag.child("t.png"); break;
-            case 'T' : imageRef = FirstActivity.m_database.m_leatersStorag.child("t.png"); break;
-            case 'u' : imageRef = FirstActivity.m_database.m_leatersStorag.child("u.png"); break;
-            case 'U' : imageRef = FirstActivity.m_database.m_leatersStorag.child("u.png"); break;
-            case 'v' : imageRef = FirstActivity.m_database.m_leatersStorag.child("v.png"); break;
-            case 'V' : imageRef = FirstActivity.m_database.m_leatersStorag.child("v.png"); break;
-            case 'w' : imageRef = FirstActivity.m_database.m_leatersStorag.child("w.png"); break;
-            case 'W' : imageRef = FirstActivity.m_database.m_leatersStorag.child("w.png"); break;
-            case 'x' : imageRef = FirstActivity.m_database.m_leatersStorag.child("x.png"); break;
-            case 'X' : imageRef = FirstActivity.m_database.m_leatersStorag.child("x.png"); break;
-            case 'y' : imageRef = FirstActivity.m_database.m_leatersStorag.child("y.png"); break;
-            case 'Y' : imageRef = FirstActivity.m_database.m_leatersStorag.child("y.png"); break;
-            case 'z' : imageRef = FirstActivity.m_database.m_leatersStorag.child("z.png"); break;
-            case 'Z' : imageRef = FirstActivity.m_database.m_leatersStorag.child("z.png"); break;
-            default:   imageRef = FirstActivity.m_database.m_leatersStorag.child("a.png"); break;
+            case 'a' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fa.png?alt=media&token=fce54a01-6611-4d66-8c6a-f24f9d28fc28"; break;
+            case 'A' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fa.png?alt=media&token=fce54a01-6611-4d66-8c6a-f24f9d28fc28"; break;
+            case 'b' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fb.png?alt=media&token=02c31d64-b374-49bd-9343-0766ba6160ac"; break;
+            case 'B' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fb.png?alt=media&token=02c31d64-b374-49bd-9343-0766ba6160ac"; break;
+            case 'c' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fc.png?alt=media&token=090a55da-5113-433c-9fc6-2d38369abb05"; break;
+            case 'C' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fc.png?alt=media&token=090a55da-5113-433c-9fc6-2d38369abb05"; break;
+            case 'd' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fd.png?alt=media&token=7bf58171-2923-41e2-9330-7b8ead3ede57"; break;
+            case 'D' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fd.png?alt=media&token=7bf58171-2923-41e2-9330-7b8ead3ede57"; break;
+            case 'e' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fe.png?alt=media&token=1d259524-0094-4743-9c26-c959174ea8d2"; break;
+            case 'E' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fe.png?alt=media&token=1d259524-0094-4743-9c26-c959174ea8d2"; break;
+            case 'f' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Ff.png?alt=media&token=5f45a358-c08e-45b0-95af-92874871a89e"; break;
+            case 'F' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Ff.png?alt=media&token=5f45a358-c08e-45b0-95af-92874871a89e"; break;
+            case 'g' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fg.png?alt=media&token=8c444db9-617c-442a-86ba-5ad308f2cd2a"; break;
+            case 'G' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fg.png?alt=media&token=8c444db9-617c-442a-86ba-5ad308f2cd2a"; break;
+            case 'h' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fh.png?alt=media&token=03406ec5-d9c5-41b7-81c3-0c49977d1ef4"; break;
+            case 'H' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fh.png?alt=media&token=03406ec5-d9c5-41b7-81c3-0c49977d1ef4"; break;
+            case 'i' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fi.png?alt=media&token=80b540ff-36dd-49e1-8e95-23e6c67922b5"; break;
+            case 'I' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fi.png?alt=media&token=80b540ff-36dd-49e1-8e95-23e6c67922b5"; break;
+            case 'j' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fj.png?alt=media&token=bce4d02d-04f0-43c3-aa06-84bc86f0101d"; break;
+            case 'J' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fj.png?alt=media&token=bce4d02d-04f0-43c3-aa06-84bc86f0101d"; break;
+            case 'k' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fk.png?alt=media&token=07222357-8854-4fbd-94af-e6a271637159"; break;
+            case 'K' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fk.png?alt=media&token=07222357-8854-4fbd-94af-e6a271637159"; break;
+            case 'l' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fl.png?alt=media&token=af0baee0-c120-494f-b043-dcf49d07f685"; break;
+            case 'L' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fl.png?alt=media&token=af0baee0-c120-494f-b043-dcf49d07f685"; break;
+            case 'm' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fm.png?alt=media&token=7ee07af9-3a09-44b3-b1bc-c84594e3660f"; break;
+            case 'M' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fm.png?alt=media&token=7ee07af9-3a09-44b3-b1bc-c84594e3660f"; break;
+            case 'n' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fn.png?alt=media&token=e6401826-4916-4bab-b605-ef759c66266a"; break;
+            case 'N' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fn.png?alt=media&token=e6401826-4916-4bab-b605-ef759c66266a"; break;
+            case 'o' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fo.png?alt=media&token=dd87ce08-8ea3-4aab-b3d3-fdd322abfee3"; break;
+            case 'O' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fo.png?alt=media&token=dd87ce08-8ea3-4aab-b3d3-fdd322abfee3"; break;
+            case 'p' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fp.png?alt=media&token=9f64c565-31a7-4d65-8b20-b9c1218642ec"; break;
+            case 'P' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fp.png?alt=media&token=9f64c565-31a7-4d65-8b20-b9c1218642ec"; break;
+            case 'q' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fq.png?alt=media&token=f32f94bb-3e43-476d-9fa6-57cc0f803c1f"; break;
+            case 'Q' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fq.png?alt=media&token=f32f94bb-3e43-476d-9fa6-57cc0f803c1f"; break;
+            case 'r' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fr.png?alt=media&token=70f96f97-d37f-476f-b222-743402234dfa"; break;
+            case 'R' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fr.png?alt=media&token=70f96f97-d37f-476f-b222-743402234dfa"; break;
+            case 's' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fs.png?alt=media&token=18ffa759-4494-43a7-831d-847c111732a0"; break;
+            case 'S' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fs.png?alt=media&token=18ffa759-4494-43a7-831d-847c111732a0"; break;
+            case 't' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Ft.png?alt=media&token=440d56e0-4764-43f5-9b2d-e2367d8e23cb"; break;
+            case 'T' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Ft.png?alt=media&token=440d56e0-4764-43f5-9b2d-e2367d8e23cb"; break;
+            case 'u' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fu.png?alt=media&token=6b016ff7-45c7-405a-b297-92b89ad2ee05"; break;
+            case 'U' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fu.png?alt=media&token=6b016ff7-45c7-405a-b297-92b89ad2ee05"; break;
+            case 'v' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fv.png?alt=media&token=ca655063-f59f-4295-a857-7710fd037a0a"; break;
+            case 'V' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fv.png?alt=media&token=ca655063-f59f-4295-a857-7710fd037a0a"; break;
+            case 'w' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fw.png?alt=media&token=9d4d77d8-16df-490f-9333-7a5bc0dcf850"; break;
+            case 'W' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fw.png?alt=media&token=9d4d77d8-16df-490f-9333-7a5bc0dcf850"; break;
+            case 'x' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fx.png?alt=media&token=cdb17dd7-20fc-457c-b5b4-4cf39b2efd32"; break;
+            case 'X' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fx.png?alt=media&token=cdb17dd7-20fc-457c-b5b4-4cf39b2efd32"; break;
+            case 'y' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fy.png?alt=media&token=69d1aca1-cca8-49d8-84d3-a570e2d723b4"; break;
+            case 'Y' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fy.png?alt=media&token=69d1aca1-cca8-49d8-84d3-a570e2d723b4"; break;
+            case 'z' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fz.png?alt=media&token=2dd63f58-435c-440f-80b4-74ee432e0fb8"; break;
+            case 'Z' : url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fz.png?alt=media&token=2dd63f58-435c-440f-80b4-74ee432e0fb8"; break;
+            default:   url = "https://firebasestorage.googleapis.com/v0/b/chalange-b84f3.appspot.com/o/Leaters%2Fz.png?alt=media&token=2dd63f58-435c-440f-80b4-74ee432e0fb8"; break;
         }
         Glide.with(getApplicationContext())
-                .using(new FirebaseImageLoader())
-                .load(imageRef)
+                .load(url)
                 .into(image);
-
-        return image;
     }
 
 //    public int getIconId(String name)

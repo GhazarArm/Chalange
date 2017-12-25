@@ -171,9 +171,7 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
 
         m_accountItemWidgets.txtDesc.setText(rowItem.getDesc());
         m_accountItemWidgets.txtTitle.setText(rowItem.getTitle());
-        ImageView image = rowItem.getImageId();
-        Drawable d = image.getDrawable();
-        m_accountItemWidgets.imageView.setImageDrawable(d);
+        MainActivity.m_mainActivity.getIcon(rowItem.getTitle(), m_accountItemWidgets.imageView);
 
         return view;
     };

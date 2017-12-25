@@ -76,7 +76,7 @@ public class MyProfile extends Fragment implements View.OnClickListener {
             ageButton.setText(Integer.toString(MainActivity.m_mainActivity.m_curentAccount.get_age()));
             genderButton.setText((MainActivity.m_mainActivity.m_curentAccount.get_gender() ? "Male" : "Famel"));
             teamButton.setText("Red");
-            myProfileImageView = MainActivity.m_mainActivity.getIconId(MainActivity.m_mainActivity.m_curentAccount.get_name());
+            MainActivity.m_mainActivity.getIcon(MainActivity.m_mainActivity.m_curentAccount.get_name(), myProfileImageView);
         }catch (Exception ex) {
             Log.e("My Error", ex.toString());
         }

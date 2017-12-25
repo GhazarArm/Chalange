@@ -105,8 +105,7 @@ public class GuestActivity extends AppCompatActivity {
                 m_accounts.add(acc);
                 String dateString = postSnapshot.child(Events.EVENT_DATE).getValue(String.class);
 
-                AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()),
-                        acc.get_name() + "  " + acc.get_lastName(),
+                AddItem(acc.get_name() + "  " + acc.get_lastName(),
                         Integer.toString(acc.get_age()),
                         dateString,
                         acc.get_id());
@@ -119,9 +118,9 @@ public class GuestActivity extends AppCompatActivity {
         return super.onCreateView(parent, name, context, attrs);
     }
 
-    public void AddItem(ImageView imageName, String text, String extraText, String time, String id)
+    public void AddItem(String text, String extraText, String time, String id)
     {
-        RowItem rowItem = new RowItem(imageName, text, extraText, time, id);
+        RowItem rowItem = new RowItem(text, extraText, time, id);
         m_adapter.add(rowItem);
     }
 }

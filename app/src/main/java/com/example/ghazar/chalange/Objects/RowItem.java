@@ -9,15 +9,13 @@ public class RowItem {
     private String ID;
     private String time;
 
-    public RowItem(ImageView imageId, String title, String desc, String id) {
-        this.imageId = imageId;
+    public RowItem(String title, String desc, String id) {
         this.title = title;
         this.desc = desc;
         ID = id;
     }
 
-    public RowItem(ImageView imageId, String title, String desc, String time, String id) {
-        this.imageId = imageId;
+    public RowItem(String title, String desc, String time, String id) {
         this.title = title;
         this.desc = desc;
         ID = id;

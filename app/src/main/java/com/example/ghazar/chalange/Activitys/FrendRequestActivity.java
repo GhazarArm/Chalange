@@ -110,20 +110,20 @@ public class FrendRequestActivity extends AppCompatActivity {
                 if(i < frends.size()) {
                     Account acc = FirstActivity.m_database.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                     m_accounts.add(acc);
-                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName() + "+", Integer.toString(acc.get_age()), acc.get_id());
+                    AddItem(acc.get_name() + "  " + acc.get_lastName() + "+", Integer.toString(acc.get_age()), acc.get_id());
                 }
                 else{
                     Account acc = FirstActivity.m_database.getAccount(postSnapshot.child(Events.EVENT_TEXT).getValue(String.class));
                     m_accounts.add(acc);
-                    AddItem(MainActivity.m_mainActivity.getIconId(acc.get_name()), acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
+                    AddItem(acc.get_name() + "  " + acc.get_lastName(), Integer.toString(acc.get_age()), acc.get_id());
                 }
             }
         }
     }
 
-    public void AddItem(ImageView imageName, String text, String extraText, String id)
+    public void AddItem(String text, String extraText, String id)
     {
-        RowItem rowItem = new RowItem(imageName, text, extraText, id);
+        RowItem rowItem = new RowItem(text, extraText, id);
         m_adapter.add(rowItem);
     }
 }
