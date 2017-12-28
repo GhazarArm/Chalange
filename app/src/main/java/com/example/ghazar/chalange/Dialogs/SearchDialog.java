@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
+import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.R;
 import com.example.ghazar.chalange.Tabs.Tag2;
 
@@ -28,6 +29,8 @@ public class SearchDialog extends Dialog implements View.OnClickListener {
     public SearchDialog(@NonNull Context context) {
         super(context);
         setContentView(R.layout.search_layout);
+
+        this.setTitle("Search");
 
         Button SearchButton = (Button)findViewById(R.id.search_button_of_dialog);
         SearchButton.setOnClickListener(this);
@@ -81,7 +84,10 @@ public class SearchDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         if(v.getId() == R.id.search_button_of_dialog)
         {
-            Tag2.m_tab2.SearchAccount(m_nameEditText.getText().toString(), m_ageMaxSeekBar.getProgress(), m_ageMinSeekBar.getProgress());
+            if(m_nameEditText.getText().toString().length() > 0){
+                Tag2.m_this.SearchAccount(m_nameEditText.getText().toString(), m_ageMaxSeekBar.getProgress(), m_ageMinSeekBar.getProgress());
+                this.cancel();
+            }
         }
     }
 

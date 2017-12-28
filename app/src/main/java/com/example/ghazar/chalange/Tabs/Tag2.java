@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +35,13 @@ public class Tag2 extends Fragment{
 
     public final int REQUEST_CODE_OF_CHAT_ACTIVITY = 1;
 
-    public static Tag2 m_tab2;
+    public static Tag2 m_this;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        m_tab2 = this;
+        m_this = this;
         View m_view = inflater.inflate(R.layout.tab1, container, false);
         m_listViewFrends = (ListView) m_view.findViewById(R.id.ListViewChallanges);
         m_adapter = new CustomListAdapter(getActivity(), R.layout.account_item);
@@ -69,9 +70,11 @@ public class Tag2 extends Fragment{
     {
         for(Account acc : accounts)
         {
-            AddItem(acc.get_name() + "  " + acc.get_lastName(),
-                    Integer.toString(acc.get_age()),
-                    acc.get_id());
+            if(acc != null) {
+                AddItem(acc.get_name() + "  " + acc.get_lastName(),
+                        Integer.toString(acc.get_age()),
+                        acc.get_id());
+            }
         }
     }
 
@@ -85,6 +88,8 @@ public class Tag2 extends Fragment{
     public void SearchAccount(String name, int maxAge, int minAge){
         m_accounts = FirstActivity.m_database.SearchAccount(name, maxAge, minAge);
         m_adapter.clear();
-        initListView(m_accounts);
+        if(m_accounts != null) {
+            initListView(m_accounts);
+        }
     }
 }

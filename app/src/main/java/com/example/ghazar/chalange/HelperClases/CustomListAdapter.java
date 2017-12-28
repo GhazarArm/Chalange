@@ -50,7 +50,6 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
         //For frend request activity
         ImageView AddFrendButton = null;
         ImageView DeleteButton = null;
-        TextView  FrendMessage = null;
 
         //For challange resuest dialog
         ImageView AcceptChallange = null;
@@ -88,29 +87,24 @@ public class CustomListAdapter extends ArrayAdapter<RowItem>{
                 view = inflater.inflate(R.layout.frend_request_account_item, null,true);
                 m_accountItemWidgets.txtDesc = (TextView) view.findViewById(R.id.Desc);
                 m_accountItemWidgets.txtTitle = (TextView) view.findViewById(R.id.title);
-                m_accountItemWidgets.FrendMessage = (TextView) view.findViewById(R.id.message);
                 m_accountItemWidgets.imageView = (ImageView) view.findViewById(R.id.icon);
                 m_accountItemWidgets.AddFrendButton = (ImageView)view.findViewById(R.id.AddFrend);
                 m_accountItemWidgets.DeleteButton = (ImageView)view.findViewById(R.id.Delete);
                 if(rowItem.getTitle().endsWith("+")) {
                     m_accountItemWidgets.AddFrendButton.setVisibility(View.GONE);
-                    m_accountItemWidgets.FrendMessage.setText(R.string.frend_added_you_in_her_frend_list);
                     rowItem.setTitle(rowItem.getTitle().substring(0, rowItem.getTitle().length() - 1));
-                }
-                else{
-                    m_accountItemWidgets.FrendMessage.setVisibility(View.GONE);
                 }
 
                 m_accountItemWidgets.AddFrendButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String a = rowItem.getID();
                         for(DataSnapshot postSnapshot : FirstActivity.m_database.m_AccountEventsDataSnapshot.getChildren())
                         {
                             if(postSnapshot.child(Events.EVENT_KEY).getValue(String.class).equals(Events.FREND_REQUEST_EVENT_KEY)
                             && postSnapshot.child(Events.EVENT_TEXT).getValue(String.class).equals(rowItem.getID())) {
                                 postSnapshot.getRef().removeValue();
                                 remove(rowItem);
+                                FirstActivity.m_database.addFrend(rowItem.getID());
                                 break;
                             }
                         }

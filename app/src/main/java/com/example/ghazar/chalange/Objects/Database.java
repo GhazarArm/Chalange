@@ -1,12 +1,11 @@
 package com.example.ghazar.chalange.Objects;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.ghazar.chalange.Activitys.MainActivity;
 import com.example.ghazar.chalange.Activitys.WaitingChallengeRequestActivity;
 import com.example.ghazar.chalange.FirstPage.FirstActivity;
-import com.example.ghazar.chalange.Tabs.Tag1;
+import com.example.ghazar.chalange.HelperClases.Global;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -250,23 +249,65 @@ public class Database {
         m_accountsDB.child(id).setValue(accountDB);
     }
 
-    public Vector<Account> SearchAccount(String name, int maxAge, int minAge) {
-        MainActivity.m_mainActivity.m_searchDialog.cancel();
+    public Vector<Account> SearchAccount(String text, int maxAge, int minAge) {
+        String[] words = Global.getWords(text);//get words of the String
         Vector<Account> accounts = new Vector<Account>();
+        Vector<Account> accounts1 = new Vector<Account>();
+        Vector<Account> accounts2 = new Vector<Account>();
+        Vector<Account> accounts3 = new Vector<Account>();
+        Vector<Account> accounts4 = new Vector<Account>();
+        Vector<Account> accounts5 = new Vector<Account>();
+        Vector<Account> accounts6 = new Vector<Account>();
+        Vector<Account> accounts7 = new Vector<Account>();
+        Vector<Account> accounts8 = new Vector<Account>();
         for (DataSnapshot postSnapshot : m_AccountDataSnapshot.getChildren()) {
-            String _name = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
-            if (_name.contains(name)) {
-                int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
-                if (age >= minAge && age <= maxAge) {
-                    String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
-                    String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
-                    boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
-                    Account acc = new Account(_name, lastName, age, gender, id);
-                    accounts.add(acc);
+            String firstName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(NAME).getValue(String.class);
+            String lastName = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(LAST_NAME).getValue(String.class);
+
+            int category = 0;      //search result ordered white category. if category small resoult is important
+
+            for(String str : words){
+                if (firstName.toLowerCase().startsWith(words[0].toLowerCase())) {
+                    category += 1;
+                } else if (lastName.toLowerCase().startsWith(text.toLowerCase())) {
+                    category += 2;
+                } else if (firstName.toLowerCase().contains(text.toLowerCase())) {
+                    category += 3;
+                } else if (lastName.toLowerCase().contains(text.toLowerCase())) {
+                    category += 4;
                 }
             }
+            Account acc = null;
+            int age = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(AGE).getValue(int.class);
+            if (category != 0 && age >= minAge && age <= maxAge) {
+                String id = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(ID).getValue(String.class);
+                boolean gender = postSnapshot.child(MY_ACCOUNT_DATABASE_NAME).child(GENDER).getValue(boolean.class);
+                acc = new Account(firstName, lastName, age, gender, id);
+            }
+            switch (category){
+                case 0: break;
+                case 1: accounts1.add(acc); break;
+                case 2: accounts2.add(acc); break;
+                case 3: accounts3.add(acc); break;
+                case 4: accounts4.add(acc); break;
+                case 5: accounts5.add(acc); break;
+                case 6: accounts6.add(acc); break;
+                case 7: accounts7.add(acc); break;
+                default: accounts8.add(acc); break;
+            }
         }
-        return accounts;
+        for(Account a : accounts1)
+            accounts.add(a);
+        for(Account a : accounts2)
+            accounts.add(a);
+        for(Account a : accounts3)
+            accounts.add(a);
+        for(Account a : accounts4)
+            accounts.add(a);
+        if(accounts.size() >= 0)
+            return accounts;
+
+        return null;
     }
 
     public Vector<Account> getAllAccounts() {
